@@ -1,6 +1,7 @@
 from flask import Flask
 from api.ping_handler import ping_handler
 from api.home_handler import home_handler
+from config import DB_USERNAME, DB_PASSWORD, DB_NAME
 from models import db
 
 
