@@ -1,6 +1,5 @@
-import { FormControl, TextField, Button, InputLabel, MenuItem, Select } from "@material-ui/core";
-
 import React, { Component } from 'react';
+import { FormControl, TextField, Button, InputLabel, MenuItem, Select } from '@material-ui/core';
 
 class CreateReceipt extends Component {
   state = {
@@ -28,6 +27,7 @@ class CreateReceipt extends Component {
           <Select name={"category"} value={this.state.category} onChange={this.onFormChange} >
             <MenuItem value={"Food"} >Food</MenuItem>
             <MenuItem value={"Merchandise"} >Merchandise</MenuItem>
+            <MenuItem value={"Travel"} >Travel</MenuItem>
             <MenuItem value={"Other"} >Other</MenuItem>
           </Select>
           </FormControl>

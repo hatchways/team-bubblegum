@@ -3,7 +3,8 @@ import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route } from "react-router-dom";
 
 import { theme } from "./themes/theme";
-import CreateReceipt from "./pages/CreateReceipt";
+import Dashboard from "./pages/Dashboard";
+import ButtonAppBar from "./pages/ButtonAppBar";
 
 import "./App.css";
 
@@ -11,7 +12,8 @@ function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
-        <Route path="/" component={CreateReceipt} />
+        <ButtonAppBar />
+        <Route path="/" component={Dashboard} />
       </BrowserRouter>
     </MuiThemeProvider>
   );
