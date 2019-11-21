@@ -6,6 +6,7 @@ import { theme } from "./themes/theme";
 import Dashboard from "./pages/Dashboard";
 import ButtonAppBar from "./pages/ButtonAppBar";
 import SideBar from "./pages/SideBar";
+import CreateReceipt from "./pages/CreateReceipt";
 
 import "./App.css";
 
@@ -15,7 +16,8 @@ function App() {
       <BrowserRouter>
         <ButtonAppBar />
         <SideBar />
-        <Route path="/" component={Dashboard} />
+        <Route exact path="/" component={Dashboard} />
+        <Route path="/receipt" component={CreateReceipt} />
       </BrowserRouter>
     </MuiThemeProvider>
   );
