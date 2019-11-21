@@ -5,6 +5,7 @@ import { BrowserRouter, Route } from "react-router-dom";
 import { theme } from "./themes/theme";
 import Dashboard from "./pages/Dashboard";
 import ButtonAppBar from "./pages/ButtonAppBar";
+import SideBar from "./pages/SideBar";
 
 import "./App.css";
 
@@ -13,6 +14,7 @@ function App() {
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
         <ButtonAppBar />
+        <SideBar />
         <Route path="/" component={Dashboard} />
       </BrowserRouter>
     </MuiThemeProvider>

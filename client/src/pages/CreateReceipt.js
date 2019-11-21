@@ -1,5 +1,12 @@
 import React, { Component } from 'react';
 import { FormControl, TextField, Button, InputLabel, MenuItem, Select } from '@material-ui/core';
+import { withStyles } from '@material-ui/core/styles';
+
+const useStyles = theme => ({
+  button: {
+    margin: theme.spacing(1, 0),
+  }
+});
 
 class CreateReceipt extends Component {
   state = {
@@ -17,6 +24,7 @@ class CreateReceipt extends Component {
   }
 
   render() {
+    const { classes } = this.props;
     return (
       <div>
         <FormControl>
@@ -31,11 +39,11 @@ class CreateReceipt extends Component {
             <MenuItem value={"Other"} >Other</MenuItem>
           </Select>
           </FormControl>
-        </FormControl>
-        <Button onClick={this.onBtnClick} >Submit</Button>
+        </FormControl><br />
+        <Button className={classes.button} onClick={this.onBtnClick} >Submit</Button>
       </div>
     );
   }
 }
 
-export default CreateReceipt;
+export default withStyles(useStyles)(CreateReceipt);

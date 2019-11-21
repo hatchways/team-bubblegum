@@ -4,16 +4,14 @@ import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
-import IconButton from '@material-ui/core/IconButton';
-import MenuIcon from '@material-ui/icons/Menu';
 import { Link } from 'react-router-dom';
 
 const useStyles = makeStyles(theme => ({
   root: {
     flexGrow: 1,
   },
-  menuButton: {
-    marginRight: theme.spacing(2),
+  appBar: {
+    zIndex: theme.zIndex.drawer + 1,
   },
   title: {
     flexGrow: 1,
@@ -25,15 +23,12 @@ function ButtonAppBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static">
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
-          <IconButton edge="start" className={classes.menuButton} color="inherit" aria-label="menu">
-            <MenuIcon />
-          </IconButton>
-          <Typography variant="h6" className={classes.title}>
+          <Typography variant="h6" align="center" className={classes.title}>
             Application Name
           </Typography>
-          <Button component={ Link } to="/receipt" color="inherit">Create Receipt</Button>
+          <Button component={ Link } to="/receipt" variant="outlined" color="inherit">Upload Receipt</Button>
         </Toolbar>
       </AppBar>
     </div>
