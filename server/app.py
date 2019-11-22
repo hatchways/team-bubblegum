@@ -1,4 +1,4 @@
-from flask import Flask, request, redirect, url_for, render_template
+from flask import Flask, request, redirect, url_for, render_template, jsonify
 from flask_sqlalchemy import SQLAlchemy
 from api.ping_handler import ping_handler
 from api.home_handler import home_handler
@@ -6,6 +6,9 @@ from config import DB_USERNAME, DB_PASSWORD, DB_NAME
 from flask_bcrypt import Bcrypt
 from email_validator import validate_email
 import jwt
+import json
+import re
+
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://{}:{}@localhost/{}'.format(DB_USERNAME, DB_PASSWORD, DB_NAME)
@@ -40,18 +43,20 @@ def index():
 
 @app.route('/signup', methods=['POST'])
 def signup():
-  print('-----', request.form['password'], '-----')
-  if validate_email(request.form['email']) == False:
-    return 'Please enter a valid email'
-  if len(request.form['password']) < 6:
-    return 'Password must be 6 letters or more'
-  user = User(request.form['email'], request.form['password'])
+  body = json.loads(request.get_data())
+  EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
+  print(EMAIL_REGEX.match(body['email']), 'here')
+  if EMAIL_REGEX.match(body['email']) == None: 
+    return jsonify({'err':'Please enter a valid email'})
+  if len(body["password"]) < 6:
+    return jsonify({'err': 'Password must be 6 letters or more'})
+  user = User(body["email"], body["password"])
   db.session.add(user)
   db.session.commit()
 
-  token = jwt.encode({'email': request.form['email']})
-  print(token)
-  return redirect(url_for('index'))
+  token = jwt.encode(body, app.config['SECRET_KEY']).decode("utf-8")
+  print(token, type(token))
+  return jsonify({'token': token})
   
 @app.route('/login', methods=['GET', 'POST'])
 def login():
