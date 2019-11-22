@@ -24,3 +24,16 @@ class Receipt(db.Model):
         self.receipt_date = receipt_date
         self.pic_url = pic_url
         self.date_created = date.today()
+
+    def __repr__(self):
+        return f"Receipt {self.id}, Title: {self.title}"
+
+    def to_dict(self):
+        return {'id': self.id,
+                'title': self.title,
+                'amount': self.amount,
+                'cateogory': self.category,
+                'receipt_date': self.receipt_date,
+                'pic_url': self.pic_url,
+                'date_created': self.date_created,
+                'user_id': self.user_id}
