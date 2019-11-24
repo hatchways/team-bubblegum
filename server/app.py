@@ -30,16 +30,17 @@ class User(db.Model):
   def __repr__(self):
     return '<User %r>' % self.email
 
-@app.route('/')
-def index(): 
-  myUser = User.query.all()
-  singleUser = User.query.filter_by(email='test1@test.com').first()
-  if(singleUser):
-    pw_hash = singleUser.password
-    isTrue = bcrypt.check_password_hash(pw_hash,'134')
-    print(isTrue)
+# USE FOR TESTING / CAN BE REMOVED
+# @app.route('/')
+# def index(): 
+#   myUser = User.query.all()
+#   singleUser = User.query.filter_by(email='test1@test.com').first()
+#   if(singleUser):
+#     pw_hash = singleUser.password
+#     isTrue = bcrypt.check_password_hash(pw_hash,'134')
+#     print(isTrue)
     
-  return render_template('add_user.html', myUser=myUser, singleUser=singleUser)
+#   return render_template('add_user.html', myUser=myUser, singleUser=singleUser)
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -75,9 +76,10 @@ def login():
       return 'Invalid credentials'
   return 'Invalid credentials'
 
-@app.route('/home')
-def home():
-  return render_template('user_home.html')  
+# CAN BE REMOVED
+# @app.route('/home')
+# def home():
+#   return render_template('user_home.html')  
 
 app.register_blueprint(home_handler)
 app.register_blueprint(ping_handler)
