@@ -30,16 +30,17 @@ class User(db.Model):
   def __repr__(self):
     return '<User %r>' % self.email
 
-@app.route('/')
-def index(): 
-  myUser = User.query.all()
-  singleUser = User.query.filter_by(email='test1@test.com').first()
-  if(singleUser):
-    pw_hash = singleUser.password
-    isTrue = bcrypt.check_password_hash(pw_hash,'134')
-    print(isTrue)
+# USE FOR TESTING / CAN BE REMOVED
+# @app.route('/')
+# def index(): 
+#   myUser = User.query.all()
+#   singleUser = User.query.filter_by(email='test1@test.com').first()
+#   if(singleUser):
+#     pw_hash = singleUser.password
+#     isTrue = bcrypt.check_password_hash(pw_hash,'134')
+#     print(isTrue)
     
-  return render_template('add_user.html', myUser=myUser, singleUser=singleUser)
+#   return render_template('add_user.html', myUser=myUser, singleUser=singleUser)
 
 @app.route('/signup', methods=['POST'])
 def signup():
@@ -61,22 +62,24 @@ def signup():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
   if request.method == 'POST':
-    find_user = User.query.filter_by(email=request.form['email']).first()
+    body = json.loads(request.get_data())
+    find_user = User.query.filter_by(email=body['email']).first()
     if find_user:
-      is_authenticated = bcrypt.check_password_hash(find_user.password, request.form['password'])
+      is_authenticated = bcrypt.check_password_hash(find_user.password, body['password'])
       if is_authenticated:
-        token = jwt.encode({'email': find_user.email}, app.config['SECRET_KEY'])
+        token = jwt.encode(body, app.config['SECRET_KEY']).decode("utf-8")
         print(token)
-        return redirect(url_for('home'))
+        return jsonify({'token': token})
       else:
         return 'Invalid credentials'
     else: 
-      return 'Invlaid credentials'
-  return render_template('login_user.html')
+      return 'Invalid credentials'
+  return 'Invalid credentials'
 
-@app.route('/home')
-def home():
-  return render_template('user_home.html')  
+# CAN BE REMOVED
+# @app.route('/home')
+# def home():
+#   return render_template('user_home.html')  
 
 app.register_blueprint(home_handler)
 app.register_blueprint(ping_handler)
