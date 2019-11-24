@@ -61,17 +61,19 @@ def signup():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
   if request.method == 'POST':
-    find_user = User.query.filter_by(email=request.form['email']).first()
+    body = json.loads(request.get_data())
+    find_user = User.query.filter_by(email=body['email']).first()
     if find_user:
-      is_authenticated = bcrypt.check_password_hash(find_user.password, request.form['password'])
+      is_authenticated = bcrypt.check_password_hash(find_user.password, body['password'])
       if is_authenticated:
-        token = jwt.encode({'email': find_user.email}, app.config['SECRET_KEY']).decode("utf-8")
+        token = jwt.encode(body, app.config['SECRET_KEY']).decode("utf-8")
+        print(token)
         return jsonify({'token': token})
       else:
         return 'Invalid credentials'
     else: 
-      return 'Invlaid credentials'
-  return render_template('login_user.html')
+      return 'Invalid credentials'
+  return 'Invalid credentials'
 
 @app.route('/home')
 def home():
