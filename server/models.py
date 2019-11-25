@@ -26,12 +26,13 @@ class Receipt(db.Model):
         self.date_created = date.today()
 
     def __repr__(self):
-        return f"Receipt {self.id}, Title: {self.title}"
+        # return f"Receipt {self.id}, Title: {self.title}" < having syntax error
+        return 'Receipt %s, Title: %s' % (self.id, self.title)
 
     def to_dict(self):
         return {'id': self.id,
                 'title': self.title,
-                'amount': self.amount,
+                'amount': str(self.amount),
                 'cateogory': self.category,
                 'receipt_date': self.receipt_date,
                 'pic_url': self.pic_url,
