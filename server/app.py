@@ -71,10 +71,10 @@ def login():
         print(token)
         return jsonify({'token': token})
       else:
-        return 'Invalid credentials'
+        return jsonify({'err': 'Invalid credentials'})
     else: 
-      return 'Invalid credentials'
-  return 'Invalid credentials'
+      return jsonify({'err': 'Invalid credentials'})
+  return jsonify({'err': 'Invalid credentials'})
 
 # CAN BE REMOVED
 # @app.route('/home')
