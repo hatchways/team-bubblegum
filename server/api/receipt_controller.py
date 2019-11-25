@@ -59,8 +59,8 @@ def get_all_receipts(year, month):
     for receipt in receipts:
         total_amount += receipt.amount
 
-    return jsonify({"total_amount": str(total_amount),
-                    "posts": [receipt.to_dict() for receipt in receipts]})
+    return jsonify(total_amount=str(total_amount),
+                   posts=[receipt.to_dict() for receipt in receipts])
 
 
 @receipt_controller.route('/<int:id>', methods=['GET'])
