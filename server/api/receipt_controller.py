@@ -1,6 +1,7 @@
 from flask import Blueprint, request, jsonify
 from server.models import db, Receipt
-import datetime
+import datetime as dt
+from datetime import datetime
 import calendar
 
 receipt_controller = Blueprint('receipt_controller',
@@ -38,50 +39,45 @@ def create():
 @receipt_controller.route('/<int:year>', methods=['GET'])
 @receipt_controller.route('/<int:year>/<int:month>', methods=['GET'])
 @receipt_controller.route('/<int:year>/<int:month>/<int:date>', methods=['GET'])
-def get_all_receipts(year=None, month=None, date=None, weekly=False):
+def get_all_receipts(year=None, month=None, date=None, weekly=False,
+                     start_date=None, end_date=None):
     if request.args.get('weekly') is not None:
         weekly = int(request.args.get('weekly'))
     total_amount = 0
-    receipts = []
 
+    # if user provides start and end dates
+    if start_date is not None and end_date is not None:
+        start_date = datetime.strptime(request.args.get('start_date'), '%Y-%m-%d')
+        end_date = datetime.strptime(request.args.get('end_date'), '%Y-%m-%d')
+    # show all receipts
     if year is None and month is None and date is None:
-        receipts = Receipt.query.order_by(Receipt.receipt_date.desc()).all()
-        # Receipt.query.all() returns empty list if there are no records
-        if receipts == []:
-            return receipts
+        start_date = datetime.min
+        end_date = datetime.max
+    # filter by year
     elif year is not None and month is None and date is None:
-        start_date = datetime.date(year, 1, 1)
-        end_date = datetime.date(year, 12, 31)
-
-        receipts = (Receipt.query
-                    .filter(Receipt.receipt_date <= end_date)
-                    .filter(Receipt.receipt_date >= start_date)
-                    .order_by(Receipt.receipt_date.desc()))
+        start_date = dt.date(year, 1, 1)
+        end_date = dt.date(year, 12, 31)
+    # filter by month
     elif year is not None and month is not None and date is None:
         num_days = calendar.monthrange(year, month)[1]
-        start_date = datetime.date(year, month, 1)
-        end_date = datetime.date(year, month, num_days)
+        start_date = dt.date(year, month, 1)
+        end_date = dt.date(year, month, num_days)
+    # filter by day/week
+    elif year is not None and month is not None and date is not None:
+        if weekly:
+            start_date = dt.date(year, month, date)
+            day_of_week = start_date.isoweekday()
+            if day_of_week != 7:
+                start_date -= dt.timedelta(days=day_of_week)
+            end_date = start_date + dt.timedelta(days=6)
+        else:
+            start_date = dt.date(year, month, date)
+            end_date = dt.date(year, month, date)
 
-        receipts = (Receipt.query
-                    .filter(Receipt.receipt_date <= end_date)
-                    .filter(Receipt.receipt_date >= start_date)
-                    .order_by(Receipt.receipt_date.desc()))
-    elif year is not None and month is not None and date is not None and weekly is False:
-        d = datetime.date(year, month, date)
-        receipts = (Receipt.query
-                    .filter(Receipt.receipt_date == d)
-                    .order_by(Receipt.receipt_date.desc()))
-    elif year is not None and month is not None and date is not None and weekly is True:
-        start_date = datetime.date(year, month, date)
-        day_of_week = start_date.isoweekday()
-        if day_of_week != 7:
-            start_date -= datetime.timedelta(days=day_of_week)
-        end_date = start_date + datetime.timedelta(days=6)
-
-        receipts = (Receipt.query
-                    .filter(Receipt.receipt_date <= end_date)
-                    .filter(Receipt.receipt_date >= start_date)
-                    .order_by(Receipt.receipt_date.desc()))
+    receipts = (Receipt.query
+                .filter(Receipt.receipt_date <= end_date)
+                .filter(Receipt.receipt_date >= start_date)
+                .order_by(Receipt.receipt_date.desc()))
 
     for receipt in receipts:
         total_amount += receipt.amount
