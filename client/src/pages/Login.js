@@ -3,7 +3,6 @@ import { TextField, Button, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import bgImage from '../assets/images/4c49d03df598d6822be307208f2333b1e9b42279.png';
 import logo from '../assets/images/logo.png';
-import { Redirect } from 'react-router-dom';
 
 import CustomizedSnackbars from '../components/Snackbar';
 
@@ -14,7 +13,8 @@ const useStyles = makeStyles(theme => ({
   imageContainer: {
     width: '100px',
     height: '100px',
-    marginBottom: '2rem'
+    marginBottom: '2rem',
+    margin: 'auto'
   },
   background: {
     backgroundImage: `url(${bgImage})`,
@@ -29,7 +29,8 @@ const useStyles = makeStyles(theme => ({
     opacity: '.28',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
+    position: 'relative'
   },
   logoOverlay: {
     position: 'absolute'
@@ -39,7 +40,11 @@ const useStyles = makeStyles(theme => ({
     height: '200px',
     fontSize: '1.5rem',
     fontWeight: 700,
-    color: '#FFF'
+    color: '#FFF',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translateX(-50%) translateY(-50%)'
   },
   logo: {
     maxHeight: '100%',
@@ -108,19 +113,11 @@ const LoginPage = () => {
     <Grid container className={classes.root}>
       <Grid item xs={false} sm={4} md={5} className={classes.background}>
         <div className={classes.overlay}></div>
-        {/* <div className={classes.logoArea}>
-          <div className={classes.imageContainer}>
-            <img src={logo} alt='' className={classes.logo} />
-          </div>
-          <div>RECEIPT TRACKER</div>
-        </div> */}
-      </Grid>
-      <Grid item xs={false} sm={4} md={5} className={classes.logoOverlay}>
         <div className={classes.logoArea}>
           <div className={classes.imageContainer}>
             <img src={logo} alt='' className={classes.logo} />
           </div>
-          <div>RECEIPT TRACKER</div>
+          <div style={{ textAlign: 'center' }}>RECEIPT TRACKER</div>
         </div>
       </Grid>
       <Grid container direction='column' xs={12} sm={8} md={7}>

@@ -12,14 +12,16 @@ const useStyles = makeStyles(theme => ({
   imageContainer: {
     width: '100px',
     height: '100px',
-    marginBottom: '2rem'
+    marginBottom: '2rem',
+    margin: 'auto'
   },
   background: {
     backgroundImage: `url(${bgImage})`,
     backgroundRepeat: 'no-repeat',
     backgroundColor: theme.palette.grey[50],
     backgroundSize: 'cover',
-    backgroundPosition: 'center'
+    backgroundPosition: 'center',
+    position: 'relative'
   },
   overlay: {
     height: '100vh',
@@ -33,11 +35,15 @@ const useStyles = makeStyles(theme => ({
     position: 'absolute'
   },
   logoArea: {
-    width: '300px',
+    width: '100%',
     height: '200px',
     fontSize: '1.5rem',
     fontWeight: 700,
-    color: '#FFF'
+    color: '#FFF',
+    position: 'absolute',
+    top: '50%',
+    left: '50%',
+    transform: 'translateX(-50%) translateY(-50%)'
   },
   logo: {
     maxHeight: '100%',
@@ -105,19 +111,11 @@ const SignupPage = () => {
     <Grid container className={classes.root}>
       <Grid item xs={false} sm={4} md={5} className={classes.background}>
         <div className={classes.overlay}></div>
-        {/* <div className={classes.logoArea}>
-          <div className={classes.imageContainer}>
-            <img src={logo} alt='' className={classes.logo} />
-          </div>
-          <div>RECEIPT TRACKER</div>
-        </div> */}
-      </Grid>
-      <Grid item xs={false} sm={4} md={5} className={classes.logoOverlay}>
         <div className={classes.logoArea}>
           <div className={classes.imageContainer}>
             <img src={logo} alt='' className={classes.logo} />
           </div>
-          <div>RECEIPT TRACKER</div>
+          <div style={{ textAlign: 'center' }}>RECEIPT TRACKER</div>
         </div>
       </Grid>
       <Grid container direction='column' xs={12} sm={8} md={7}>
