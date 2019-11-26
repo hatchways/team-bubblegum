@@ -152,6 +152,7 @@ const LoginPage = () => {
                 className={classes.formInput}
                 onChange={e => setPassword(e.target.value)}
                 value={password}
+                type='password'
               />
               <div>
                 <Button className={classes.submit} onClick={loginUser}>
