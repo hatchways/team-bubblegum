@@ -3,21 +3,16 @@ import { MuiThemeProvider } from "@material-ui/core";
 import { BrowserRouter, Route } from "react-router-dom";
 
 import { theme } from "./themes/theme";
-import Dashboard from "./pages/Dashboard";
-import ButtonAppBar from "./pages/ButtonAppBar";
-import SideBar from "./pages/SideBar";
-import CreateReceipt from "./pages/CreateReceipt";
 
 import "./App.css";
+
+import Home from './pages/Home';
 
 function App() {
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
-        <ButtonAppBar />
-        <SideBar />
-        <Route exact path="/" component={Dashboard} />
-        <Route path="/receipt" component={CreateReceipt} />
+        <Route path="/home" component={Home} />
       </BrowserRouter>
     </MuiThemeProvider>
   );
