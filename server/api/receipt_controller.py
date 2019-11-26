@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from server.models import db, Receipt
+from models import db, Receipt
 import datetime as dt
 from datetime import datetime
 import calendar
@@ -46,11 +46,11 @@ def get_all_receipts(year=None, month=None, date=None, weekly=False,
     total_amount = 0
 
     # if user provides start and end dates
-    if start_date is not None and end_date is not None:
+    if request.args.get('start_date') is not None and request.args.get('end_date') is not None:
         start_date = datetime.strptime(request.args.get('start_date'), '%Y-%m-%d')
         end_date = datetime.strptime(request.args.get('end_date'), '%Y-%m-%d')
     # show all receipts
-    if year is None and month is None and date is None:
+    elif year is None and month is None and date is None:
         start_date = datetime.min
         end_date = datetime.max
     # filter by year
