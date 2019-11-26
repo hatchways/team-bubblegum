@@ -34,22 +34,49 @@ def create():
     return jsonify({"Success": "New receipt created"})
 
 
-@receipt_controller.route('/', defaults={'year': None, 'month': None},
-                          methods=['GET'])
+@receipt_controller.route('/', methods=['GET'])
+@receipt_controller.route('/<int:year>', methods=['GET'])
 @receipt_controller.route('/<int:year>/<int:month>', methods=['GET'])
-def get_all_receipts(year, month):
+@receipt_controller.route('/<int:year>/<int:month>/<int:date>', methods=['GET'])
+def get_all_receipts(year=None, month=None, date=None, weekly=False):
+    if request.args.get('weekly') is not None:
+        weekly = int(request.args.get('weekly'))
     total_amount = 0
     receipts = []
 
-    if year is None and month is None:
-        receipts = Receipt.query.all()
+    if year is None and month is None and date is None:
+        receipts = Receipt.query.order_by(Receipt.receipt_date.desc()).all()
         # Receipt.query.all() returns empty list if there are no records
         if receipts == []:
             return receipts
-    elif year is not None and month is not None:
+    elif year is not None and month is None and date is None:
+        start_date = datetime.date(year, 1, 1)
+        end_date = datetime.date(year, 12, 31)
+
+        receipts = (Receipt.query
+                    .filter(Receipt.receipt_date <= end_date)
+                    .filter(Receipt.receipt_date >= start_date)
+                    .order_by(Receipt.receipt_date.desc()))
+    elif year is not None and month is not None and date is None:
         num_days = calendar.monthrange(year, month)[1]
         start_date = datetime.date(year, month, 1)
         end_date = datetime.date(year, month, num_days)
+
+        receipts = (Receipt.query
+                    .filter(Receipt.receipt_date <= end_date)
+                    .filter(Receipt.receipt_date >= start_date)
+                    .order_by(Receipt.receipt_date.desc()))
+    elif year is not None and month is not None and date is not None and weekly is False:
+        d = datetime.date(year, month, date)
+        receipts = (Receipt.query
+                    .filter(Receipt.receipt_date == d)
+                    .order_by(Receipt.receipt_date.desc()))
+    elif year is not None and month is not None and date is not None and weekly is True:
+        start_date = datetime.date(year, month, date)
+        day_of_week = start_date.isoweekday()
+        if day_of_week != 7:
+            start_date -= datetime.timedelta(days=day_of_week)
+        end_date = start_date + datetime.timedelta(days=6)
 
         receipts = (Receipt.query
                     .filter(Receipt.receipt_date <= end_date)
