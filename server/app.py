@@ -30,36 +30,26 @@ class User(db.Model):
   def __repr__(self):
     return '<User %r>' % self.email
 
-# USE FOR TESTING / CAN BE REMOVED
-# @app.route('/')
-# def index(): 
-#   myUser = User.query.all()
-#   singleUser = User.query.filter_by(email='test1@test.com').first()
-#   if(singleUser):
-#     pw_hash = singleUser.password
-#     isTrue = bcrypt.check_password_hash(pw_hash,'134')
-#     print(isTrue)
-    
-#   return render_template('add_user.html', myUser=myUser, singleUser=singleUser)
-
 @app.route('/signup', methods=['POST'])
 def signup():
   body = json.loads(request.get_data())
   EMAIL_REGEX = re.compile(r'^[a-zA-Z0-9.+_-]+@[a-zA-Z0-9._-]+\.[a-zA-Z]+$')
-  print(EMAIL_REGEX.match(body['email']), 'here')
   if EMAIL_REGEX.match(body['email']) == None: 
     return jsonify({'err':'Please enter a valid email'})
   if len(body["password"]) < 6:
     return jsonify({'err': 'Password must be 6 letters or more'})
   user = User(body["email"], body["password"])
-  db.session.add(user)
-  db.session.commit()
+  try:  
+    db.session.add(user)
+    db.session.commit()
+  except:
+    return jsonify({'err': 'Account already exists'})
 
   token = jwt.encode(body, app.config['SECRET_KEY']).decode("utf-8")
   print(token, type(token))
   return jsonify({'token': token})
   
-@app.route('/login', methods=['GET', 'POST'])
+@app.route('/login', methods=['POST'])
 def login():
   if request.method == 'POST':
     body = json.loads(request.get_data())
@@ -75,11 +65,6 @@ def login():
     else: 
       return jsonify({'err': 'Invalid credentials'})
   return jsonify({'err': 'Invalid credentials'})
-
-# CAN BE REMOVED
-# @app.route('/home')
-# def home():
-#   return render_template('user_home.html')  
 
 app.register_blueprint(home_handler)
 app.register_blueprint(ping_handler)
