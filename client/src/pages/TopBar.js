@@ -7,6 +7,7 @@ import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
 import { Link } from 'react-router-dom';
 import CreateReceipt from './CreateReceipt';
+import UploadReceipt from './UploadReceipt';
 
 function getModalStyle() {
   const top = 50;
@@ -49,6 +50,7 @@ const useStyles = makeStyles(theme => ({
 function TopBar() {
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
+  const [page, setPage] = useState("upload");
   const classes = useStyles();
 
   const handleOpen = () => {
@@ -59,13 +61,19 @@ function TopBar() {
     setOpen(false);
   }
 
+  let modalPage;
+  if (page == "create") {
+    modalPage = <CreateReceipt handleClose={handleClose} setPage={setPage} />
+  } else {
+    modalPage = <UploadReceipt handleClose={handleClose} setPage={setPage} />
+  }
+
   return (
     <div className={classes.root}>
       <AppBar position="static" className={classes.appBar}>
         <Toolbar>
           <Typography className={classes.title}></Typography>
           <Button variant="outlined" className={classes.upload} onClick={handleOpen}>Upload Receipt</Button>
-          <Button component={ Link } to="/home/create" variant="outlined" className={classes.upload}>Basic Upload Receipt</Button>
           <Button><img alt="pic" />Profile</Button>
         </Toolbar>
       </AppBar>
@@ -76,7 +84,7 @@ function TopBar() {
         onClose={handleClose}
       >
         <div style={modalStyle} className={classes.paper}>
-          <CreateReceipt />
+          {modalPage}
         </div>
       </Modal>
     </div>
