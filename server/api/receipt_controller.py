@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from server.models import db, Receipt
+from models import db, Receipt
 import datetime
 import calendar
 
