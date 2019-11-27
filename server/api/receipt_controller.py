@@ -86,6 +86,17 @@ def get_all_receipts(year=None, month=None, date=None, weekly=False,
                    posts=[receipt.to_dict() for receipt in receipts])
 
 
+@receipt_controller.route('/daily-expenses/<int:year>/<int:month>', methods=['GET'])
+def get_daily_expenses_of_month(year, month):
+    start, end = calendar.monthrange(year, month)
+    daily_expenses = []
+    for date in range(start, end + 1):
+        daily_total = get_all_receipts(year, month, date)['total_amount']
+        date_str = datetime.strftime(dt.datetime(year, month, date), '%b %d')
+        daily_expenses.append({'date': date_str, 'expense': daily_total})
+    return jsonify(daily_expenses)
+
+
 @receipt_controller.route('/<int:id>', methods=['GET'])
 def get_receipt(id):
     receipt = Receipt.query.get_or_404(id)

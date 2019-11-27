@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Typography, Divider } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
+import TotalExpensesChart from "./TotalExpensesChart"
+
 const useStyles = theme => ({
   root: {
     flexGrow: 1
@@ -23,6 +25,7 @@ class Dashboard extends Component {
           <Typography variant="h4">Dashboard</Typography>
           <Divider />
           <Typography paragraph>SOME COOL STUFF HERE</Typography>
+          <TotalExpensesChart />
         </main>
       </div>
     );
