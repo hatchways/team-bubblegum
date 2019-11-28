@@ -5,18 +5,16 @@ import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import Modal from '@material-ui/core/Modal';
+import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Link } from 'react-router-dom';
 import CreateReceipt from './CreateReceipt';
 import UploadReceipt from './UploadReceipt';
 
 function getModalStyle() {
-  const top = 50;
-  const left = 50;
-
   return {
-    top: `${top}%`,
-    left: `${left}%`,
-    transform: `translate(-${top}%, -${left}%)`
+    top: '50%',
+    left: '50%',
+    transform: 'translate(-50%, -50%)'
   };
 }
 
@@ -39,7 +37,7 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     position: 'absolute',
-    width: 400,
+    width: 600,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -51,6 +49,7 @@ function TopBar() {
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState("upload");
+  const [imgUrl, setImgUrl] = useState("");
   const classes = useStyles();
 
   const handleOpen = () => {
@@ -63,9 +62,9 @@ function TopBar() {
 
   let modalPage;
   if (page == "create") {
-    modalPage = <CreateReceipt handleClose={handleClose} setPage={setPage} />
+    modalPage = <CreateReceipt handleClose={handleClose} setPage={setPage} imgUrl={imgUrl} />
   } else {
-    modalPage = <UploadReceipt handleClose={handleClose} setPage={setPage} />
+    modalPage = <UploadReceipt handleClose={handleClose} setPage={setPage} setImgUrl={setImgUrl} />
   }
 
   return (
@@ -74,7 +73,7 @@ function TopBar() {
         <Toolbar>
           <Typography className={classes.title}></Typography>
           <Button variant="outlined" className={classes.upload} onClick={handleOpen}>Upload Receipt</Button>
-          <Button><img alt="pic" />Profile</Button>
+          <Button><AccountCircleIcon />Profile</Button>
         </Toolbar>
       </AppBar>
       <Modal

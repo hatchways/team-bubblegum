@@ -13,7 +13,8 @@ class CreateReceipt extends Component {
     title: '',
     amount: 0,
     category: '',
-    receipt_date: ''
+    receipt_date: '',
+    pic_url: this.props.imgUrl
   }
 
   onFormChange = (e) => {
@@ -42,7 +43,7 @@ class CreateReceipt extends Component {
       })
       .catch(err => {
         console.log(err);
-      });
+      })
   };
 
   render() {
