@@ -3,6 +3,8 @@ import { Typography, Divider } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 import TotalExpensesChart from "./TotalExpensesChart"
+import TopCategoriesModule from "./TopCategoriesModule"
+import RecentTransactionsModule from "./RecentTransactionsModule"
 
 const useStyles = theme => ({
   root: {
@@ -26,6 +28,8 @@ class Dashboard extends Component {
           <Divider />
           <Typography paragraph>SOME COOL STUFF HERE</Typography>
           <TotalExpensesChart />
+          <TopCategoriesModule />
+          <RecentTransactionsModule />
         </main>
       </div>
     );
