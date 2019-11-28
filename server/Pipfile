@@ -10,6 +10,7 @@ flask = "*"
 flask-sqlalchemy = "*"
 psycopg2 = "*"
 psycopg2-binary = "*"
+boto3 = "*"
 
 [requires]
 python_version = "3.7"

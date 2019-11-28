@@ -13,12 +13,12 @@ const useStyles = theme => ({
   toolbar: theme.mixins.toolbar
 });
 
-class Dashboard extends Component {
+class Receipts extends Component {
   render() {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <Typography variant="h4">Dashboard</Typography>
+        <Typography variant="h4">Receipts</Typography>
         <Divider />
         <Typography paragraph>SOME COOL STUFF HERE</Typography>
       </div>
@@ -26,4 +26,4 @@ class Dashboard extends Component {
   }
 }
 
-export default withStyles(useStyles)(Dashboard);
+export default withStyles(useStyles)(Receipts);
