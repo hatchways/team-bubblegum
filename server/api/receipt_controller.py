@@ -91,10 +91,11 @@ def get_daily_expenses_of_month(year, month):
     start, end = calendar.monthrange(year, month)
     daily_expenses = []
     for date in range(start, end + 1):
-        daily_total = get_all_receipts(year, month, date)['total_amount']
+        daily_total = get_all_receipts(year, month, date)
         date_str = datetime.strftime(dt.datetime(year, month, date), '%b %d')
-        daily_expenses.append({'date': date_str, 'expense': daily_total})
-    return jsonify(daily_expenses)
+        daily_expenses.append({'date': date_str,
+                               'expense': float(daily_total.json['total_amount'])})
+    return jsonify(data=daily_expenses)
 
 
 @receipt_controller.route('/<int:id>', methods=['GET'])

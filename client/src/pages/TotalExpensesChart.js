@@ -22,19 +22,23 @@ class TotalExpensesChart extends Component {
                        {expense: 5.13, date: "Nov 5"}]
   }
 
-//   componentDidMount() {
-//       fetch("/receipts/daily-expenses/2019/11")
-//       .then(response => {
-//         return response.json();
-//       })
-//       .then()
-//   }
+  componentDidMount() {
+      fetch("/receipts/daily-expenses/2019/11")
+      .then(response => {
+        return response.json();
+      })
+      .then(results => {
+          this.setState({
+              daily_expenses: results.data
+          })
+      })
+  }
 
   render() {
     const { classes } = this.props;
     return (
       <Paper>
-        <Chart data={this.state.daily_expenses} width={400} height={250}>
+        <Chart data={this.state.daily_expenses} width={700} height={250}>
           <ArgumentAxis />
           <ValueAxis />
 
