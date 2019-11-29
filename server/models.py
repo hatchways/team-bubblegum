@@ -33,7 +33,7 @@ class Receipt(db.Model):
         return {'id': self.id,
                 'title': self.title,
                 'amount': str(self.amount),
-                'cateogory': self.category,
+                'category': self.category,
                 'receipt_date': self.receipt_date,
                 'pic_url': self.pic_url,
                 'date_created': self.date_created,

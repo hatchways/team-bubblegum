@@ -3,6 +3,8 @@ import { Typography, Divider, FormControl, MenuItem, Select, InputLabel } from '
 import { withStyles } from '@material-ui/core/styles';
 import Paper from "@material-ui/core/Paper";
 
+import TransactionItem from "./TransactionItem"
+
 const useStyles = theme => ({
   root: {
     flexGrow: 1
@@ -13,17 +15,17 @@ const useStyles = theme => ({
 })
 
 class RecentTransactionsModule extends Component {
-    render() {
-      const { classes } = this.props;
-      return (
-        <div className={classes.root}>
-          <Typography variant="h6">Recent transactions</Typography>
-          <Paper className={classes.content}>
-            <Typography paragraph>Transactions here</Typography>
-          </Paper>
-        </div>
-      )
-    }
+  render() {
+    const { classes } = this.props;
+    return (
+      <div className={classes.root}>
+        <Typography variant="h6">Recent transactions</Typography>
+        <Paper className={classes.content}>
+          <TransactionItem />
+        </Paper>
+      </div>
+    )
   }
+}
   
-  export default withStyles(useStyles)(RecentTransactionsModule);
+export default withStyles(useStyles)(RecentTransactionsModule);

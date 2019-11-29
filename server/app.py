@@ -2,6 +2,7 @@ from flask import Flask
 from api.ping_handler import ping_handler
 from api.home_handler import home_handler
 from api.receipt_controller import receipt_controller
+from api.category_controller import category_controller
 from models import db
 from config import DB_USERNAME, DB_PASSWORD, DB_NAME
 
@@ -16,3 +17,4 @@ with app.app_context():
 app.register_blueprint(home_handler)
 app.register_blueprint(ping_handler)
 app.register_blueprint(receipt_controller)
+app.register_blueprint(category_controller)

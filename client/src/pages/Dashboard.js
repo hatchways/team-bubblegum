@@ -2,9 +2,8 @@ import React, { Component } from 'react';
 import { Typography, Divider } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
-import TotalExpensesChart from "./TotalExpensesChart"
-import TopCategoriesModule from "./TopCategoriesModule"
 import RecentTransactionsModule from "./RecentTransactionsModule"
+import DashboardMonthlySummary from "./DashboardMonthlySummary"
 
 const useStyles = theme => ({
   root: {
@@ -27,8 +26,7 @@ class Dashboard extends Component {
           <Typography variant="h4">Dashboard</Typography>
           <Divider />
           <Typography paragraph>SOME COOL STUFF HERE</Typography>
-          <TotalExpensesChart />
-          <TopCategoriesModule />
+          <DashboardMonthlySummary />
           <RecentTransactionsModule />
         </main>
       </div>
