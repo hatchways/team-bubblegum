@@ -2,6 +2,8 @@ from flask import Blueprint, request, jsonify
 from models import db, Receipt
 import datetime
 import calendar
+from config import S3_LOCATION
+from werkzeug import secure_filename
 
 receipt_controller = Blueprint('receipt_controller',
                                __name__, url_prefix='/receipts')
@@ -93,3 +95,23 @@ def update_receipt(id):
     if failed:
         return jsonify({"Error": "Failed to update receipt"})
     return jsonify({"Success": "Receipt updated"})
+
+@receipt_controller.route('/images', methods=["POST"])
+def upload_images():
+    if request.method == "POST":
+        all_images = request.files.getlist('files')
+        image_locations = []
+        try:
+            for image in all_images:
+                filename = secure_filename(image.filename)
+                image.save(filename)
+                bucket_resource.upload_file(
+                    Bucket = BUCKET_NAME,
+                    Filename=filename,
+                    Key=filename
+                )
+                image_locations.append("{}{}".format(S3_LOCATION, filename))
+            return jsonify({'locations': image_locations})
+        except Exception as e:
+            print(e)
+            return jsonify({'did not': 'workd'})

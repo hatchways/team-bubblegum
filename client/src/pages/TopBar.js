@@ -49,7 +49,7 @@ function TopBar() {
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState("upload");
-  const [imgUrl, setImgUrl] = useState("");
+  const [imgUrls, setImgUrls] = useState([]);
   const classes = useStyles();
 
   const handleOpen = () => {
@@ -62,9 +62,9 @@ function TopBar() {
 
   let modalPage;
   if (page == "create") {
-    modalPage = <CreateReceipt handleClose={handleClose} setPage={setPage} imgUrl={imgUrl} />
+    modalPage = <CreateReceipt handleClose={handleClose} setPage={setPage} imgUrls={imgUrls} />
   } else {
-    modalPage = <UploadReceipt handleClose={handleClose} setPage={setPage} setImgUrl={setImgUrl} />
+    modalPage = <UploadReceipt handleClose={handleClose} setPage={setPage} setImgUrls={setImgUrls} />
   }
 
   return (

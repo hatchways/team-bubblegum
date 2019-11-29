@@ -18,27 +18,32 @@ const useStyles = theme => ({
 
 class UploadReceipt extends Component {
   state = {
-    image: ''
+    images: null
   }
 
   onFormChange = (e) => {
-    this.setState({ [e.target.name]: e.target.files[0] });
+    this.setState({ [e.target.name]: e.target.files });
   }
 
   onBtnClick = () => {
-    console.log(this.state);
-    fetch("", {
+    let imagesList = new FormData();
+    for (let i = 0; i < this.state.images.length; i++) {
+      imagesList.append('files', this.state.images[i]);
+    }
+    fetch("/receipts/images", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(this.state)
+      // headers: { "Content-Type": "multipart/form-data" },
+      body: imagesList
     })
       .then(res => {
         return res.json();
       })
       .then(data => {
         console.log(data);
-        this.props.setImgUrl(data);
+        /*
+        this.props.setImgUrls(data['locations']);
         this.props.setPage("create");
+        */
       })
       .catch(err => {
         console.log(err);
@@ -67,7 +72,7 @@ class UploadReceipt extends Component {
                 >
                   <img src={DragDropIcon} alt="Drag and Drop Icon" />
                   Drop files here<br />or<br />
-                  <input type="file" name="image" accept="image/*" className={classes.file} onChange={this.onFormChange} />
+                  <input type="file" name="images" accept="image/*" onChange={this.onFormChange} multiple />
                   Custom Upload
                 </div>
               </label>
