@@ -40,10 +40,8 @@ class UploadReceipt extends Component {
       })
       .then(data => {
         console.log(data);
-        /*
         this.props.setImgUrls(data['locations']);
         this.props.setPage("create");
-        */
       })
       .catch(err => {
         console.log(err);

@@ -2,8 +2,9 @@ from flask import Blueprint, request, jsonify
 from models import db, Receipt
 import datetime
 import calendar
-from config import S3_LOCATION
+from config import S3_LOCATION, S3_BUCKET_NAME
 from werkzeug import secure_filename
+from app import s3
 
 receipt_controller = Blueprint('receipt_controller',
                                __name__, url_prefix='/receipts')
@@ -105,8 +106,8 @@ def upload_images():
             for image in all_images:
                 filename = secure_filename(image.filename)
                 image.save(filename)
-                bucket_resource.upload_file(
-                    Bucket = BUCKET_NAME,
+                s3.upload_file(
+                    Bucket = S3_BUCKET_NAME,
                     Filename=filename,
                     Key=filename
                 )
@@ -114,4 +115,4 @@ def upload_images():
             return jsonify({'locations': image_locations})
         except Exception as e:
             print(e)
-            return jsonify({'did not': 'workd'})
+            return jsonify({'did not': 'work'})

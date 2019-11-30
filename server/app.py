@@ -1,7 +1,4 @@
 from flask import Flask
-from api.ping_handler import ping_handler
-from api.home_handler import home_handler
-from api.receipt_controller import receipt_controller
 from models import db
 from config import DB_USERNAME, DB_PASSWORD, DB_NAME, S3_ACCESS_KEY, S3_SECRET_KEY
 import boto3
@@ -19,6 +16,10 @@ s3 = boto3.client(
     aws_access_key_id=S3_ACCESS_KEY,
     aws_secret_access_key=S3_SECRET_KEY
 )
+
+from api.ping_handler import ping_handler
+from api.home_handler import home_handler
+from api.receipt_controller import receipt_controller
 
 app.register_blueprint(home_handler)
 app.register_blueprint(ping_handler)
