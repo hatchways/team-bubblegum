@@ -7,6 +7,7 @@ import {
   Card,
   CardMedia,
   CardActionArea,
+  CardContent,
   FormControl,
   MenuItem,
   Select
@@ -22,6 +23,9 @@ const useStyles = theme => ({
   content: {
     flexGrow: 1,
     padding: theme.spacing(0, 40)
+  },
+  textCenter: {
+    textAlign: 'center'
   },
   toolbar: theme.mixins.toolbar
 });
@@ -95,8 +99,22 @@ const Receipts = props => {
             <CardActionArea>
               <CardMedia
                 image='https://source.unsplash.com/random'
-                style={{ height: '100px' }}
+                style={{ height: '200px' }}
                 // onclick it will set its info with setModalInfo
+                onClick={handleOpen}
+              ></CardMedia>
+              <CardContent className={classes.textCenter}>
+                <Typography>This is my image</Typography>
+              </CardContent>
+            </CardActionArea>
+          </Card>
+        </Grid>
+        <Grid item md={4}>
+          <Card>
+            <CardActionArea>
+              <CardMedia
+                image='https://source.unsplash.com/random'
+                style={{ height: '200px' }}
               ></CardMedia>
               <Typography>This is my image</Typography>
             </CardActionArea>
@@ -107,7 +125,7 @@ const Receipts = props => {
             <CardActionArea>
               <CardMedia
                 image='https://source.unsplash.com/random'
-                style={{ height: '100px' }}
+                style={{ height: '200px' }}
               ></CardMedia>
               <Typography>This is my image</Typography>
             </CardActionArea>
@@ -118,18 +136,7 @@ const Receipts = props => {
             <CardActionArea>
               <CardMedia
                 image='https://source.unsplash.com/random'
-                style={{ height: '100px' }}
-              ></CardMedia>
-              <Typography>This is my image</Typography>
-            </CardActionArea>
-          </Card>
-        </Grid>
-        <Grid item md={4}>
-          <Card>
-            <CardActionArea>
-              <CardMedia
-                image='https://source.unsplash.com/random'
-                style={{ height: '100px' }}
+                style={{ height: '200px' }}
               ></CardMedia>
               <Typography>This is my image</Typography>
             </CardActionArea>
