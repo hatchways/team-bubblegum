@@ -17,7 +17,9 @@ const useStyles = theme => ({
 
 const Reports = props => {
   const [receiptData, setReceiptData] = useState([]);
+  const [month, setMonth] = useState('All');
   const months = [
+    'All',
     'January',
     'February',
     'March',
@@ -47,6 +49,11 @@ const Reports = props => {
 
   const { classes } = props;
 
+  const handleMonthChange = month => {
+    setMonth(month);
+    // Make new api call with the updated month
+  };
+
   return (
     <div className={classes.root}>
       <Grid container alignItems='center' spacing={(10, 0)}>
@@ -54,7 +61,11 @@ const Reports = props => {
           <Typography variant='h4'>Reports</Typography>
         </Grid>
         <Grid item>
-          <ReceiptsSelect months={months} />
+          <ReceiptsSelect
+            month={month}
+            months={months}
+            handleMonthChange={handleMonthChange}
+          />
         </Grid>
       </Grid>
       <Grid container>

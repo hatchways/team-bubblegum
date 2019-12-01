@@ -1,10 +1,10 @@
 import React from 'react';
 import { makeStyles, withStyles } from '@material-ui/core/styles';
-import InputLabel from '@material-ui/core/InputLabel';
+// import InputLabel from '@material-ui/core/InputLabel';
 import MenuItem from '@material-ui/core/MenuItem';
 import FormControl from '@material-ui/core/FormControl';
 import Select from '@material-ui/core/Select';
-import NativeSelect from '@material-ui/core/NativeSelect';
+// import NativeSelect from '@material-ui/core/NativeSelect';
 import InputBase from '@material-ui/core/InputBase';
 
 const BootstrapInput = withStyles(theme => ({
@@ -49,32 +49,25 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function CustomizedSelects({ months }) {
+export default function CustomizedSelects({ month, months, handleMonthChange }) {
   console.log(months);
   const classes = useStyles();
-  const [age, setAge] = React.useState('');
-  const handleChange = event => {
-    setAge(event.target.value);
-  };
+
   return (
     <div>
       <FormControl className={classes.margin}>
         {/* <InputLabel id='demo-customized-select-label'>Age</InputLabel> */}
         <Select
-          labelId='demo-customized-select-label'
+          // labelId='demo-customized-select-label'
           id='demo-customized-select'
-          value={age}
-          onChange={handleChange}
+          value={month}
+          onChange={e => handleMonthChange(e.target.value)}
           input={<BootstrapInput />}
         >
-          {/* <MenuItem value=''>
-            <em>None</em>
-          </MenuItem> */}
-          {/* <MenuItem value={10}>Ten</MenuItem>
-          <MenuItem value={20}>Twenty</MenuItem>
-          <MenuItem value={30}>Thirty</MenuItem> */}
-          {months.map(month => (
-            <MenuItem value={month}>{month}</MenuItem>
+          {months.map((month, index) => (
+            <MenuItem key={month} value={index}>
+              {month}
+            </MenuItem>
           ))}
         </Select>
       </FormControl>
