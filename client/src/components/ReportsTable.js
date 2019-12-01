@@ -14,16 +14,16 @@ const useStyles = makeStyles({
     overflowX: 'auto'
   },
   table: {
-    // minWidth: 650
+    minWidth: 650,
+    width: '100%'
   },
   totalAmount: {
     color: '#38CC89'
   }
 });
 
-export default function ReportsTable({ dummyData }) {
+export default function ReportsTable({ receiptData: { posts, total_amount } }) {
   const classes = useStyles();
-  const total = dummyData.reduce((total, data) => total + data.amount, 0);
 
   return (
     <Paper className={classes.root}>
@@ -31,19 +31,22 @@ export default function ReportsTable({ dummyData }) {
         <Typography className={classes.totalAmount}>Total Expenses</Typography>
         <Box m={3} display='flex'>
           <Typography variant='h5'>$</Typography>
-          <Typography variant='h3'>{total}</Typography>
+          <Typography variant='h3'>{total_amount}</Typography>
         </Box>
       </Toolbar>
       <Table className={classes.table} aria-label='simple table'>
         <TableBody>
-          {dummyData.map(data => (
-            <TableRow key={data.id}>
-              <TableCell size='small'>{data.title}</TableCell>
-              <TableCell align='center' size='medium'>{data.amount}</TableCell>
-              <TableCell align='center'>{data.receipt_date}</TableCell>
-              <TableCell align='center'>{data.category}</TableCell>
-            </TableRow>
-          ))}
+          {posts &&
+            posts.map(data => (
+              <TableRow key={data.id}>
+                <TableCell>{data.title}</TableCell>
+                <TableCell align='center'>{data.amount}</TableCell>
+                <TableCell align='center'>
+                  {new Date(data.receipt_date).toLocaleDateString()}
+                </TableCell>
+                <TableCell align='center'>{data.cateogory}</TableCell>
+              </TableRow>
+            ))}
         </TableBody>
       </Table>
     </Paper>
