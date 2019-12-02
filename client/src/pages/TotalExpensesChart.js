@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Typography, Divider, FormControl, MenuItem, Select, InputLabel, Grid } from '@material-ui/core';
+import { Typography, Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from "@material-ui/core/Paper";
 import {
@@ -9,19 +9,22 @@ import {
   SplineSeries
 } from "@devexpress/dx-react-chart-material-ui";
 import { ArgumentScale } from '@devexpress/dx-react-chart';
+import { scaleTime } from 'd3-scale';
 
 const useStyles = theme => ({
   root: {
     flexGrow: 1,
+    minWidth: 350
   },
   content: {
 
   },
-  leftBar: {
-    width: 190,
-    display: 'inline'
+  title: {
+    padding: theme.spacing(2)
   }
 });
+
+const format = obj => obj.tickFormat();
 
 class TotalExpensesChart extends Component {
   state = {
@@ -29,14 +32,18 @@ class TotalExpensesChart extends Component {
   }
 
   componentDidMount() {
+    console.log(this.state.dailyExpenses)
     fetch("/receipts/daily-expenses/" + this.props.year + "/" + this.props.month)
     .then(response => {
       return response.json();
     })
     .then(results => {
-        this.setState({
-          dailyExpenses: results.data
-        })
+      this.setState({
+        dailyExpenses: results.data.map(item => ({
+          date: new Date(item.date['year'], item.date['month'], item.date['date']),
+          expense: item.expense
+        }))
+      })
     })
   }
 
@@ -48,7 +55,10 @@ class TotalExpensesChart extends Component {
       })
       .then(results => {
         this.setState({
-          dailyExpenses: results.data
+          dailyExpenses: results.data.map(item => ({
+            date: new Date(item.date['year'], item.date['month'], item.date['date']),
+            expense: item.expense
+          }))
         })
       })
     }
@@ -59,12 +69,12 @@ class TotalExpensesChart extends Component {
     return (
       <Grid container className={classes.root}>
         <Paper className={classes.content}>
-          <div className={classes.leftBar}>
-            <Typography paragraph>TOTAL EXPENSES</Typography>
+          <div className={classes.title}>
+            <Typography>TOTAL EXPENSES</Typography>
           </div>
-          <Chart data={this.state.dailyExpenses} width={350} height={250}>
-            <ArgumentScale />
-            <ArgumentAxis />
+          <Chart data={this.state.dailyExpenses} width={350} height={200}>
+            <ArgumentScale factory={scaleTime}  />
+            <ArgumentAxis tickFormat={format}/>
             <ValueAxis />
 
             <SplineSeries valueField="expense" argumentField="date" />

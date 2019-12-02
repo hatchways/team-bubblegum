@@ -1,10 +1,13 @@
 import React, { Component } from 'react';
-import { Typography, Divider, Grid } from '@material-ui/core';
+import { Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 const useStyles = theme => ({
   root: {
-    flexGrow: 1
+    padding: theme.spacing(2.5)
+  },
+  expense: {
+    textAlign: "end"
   }
 });
 
@@ -13,8 +16,8 @@ class TopCategoriesItem extends Component {
     const { classes } = this.props;
     return this.props.topCategories.map((topCategory) => (
       <Grid container className={classes.root}>
-        <Grid item>{ topCategory.category }</Grid> 
-        <Grid item>{ topCategory.expense }</Grid>
+        <Grid item xs={8}>{ topCategory.category }</Grid> 
+        <Grid item xs={4} className={classes.expense}>-${ topCategory.expense }</Grid>
       </Grid>
     ))
   }

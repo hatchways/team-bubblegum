@@ -35,4 +35,30 @@ def get_category_expenses(year, month):
 
     category_expenses.append({'category': category,
                               'expense': float(expense)})
-    return jsonify(categories=category_expenses)
+
+    top_three = []
+    for item in category_expenses:
+        if len(top_three) < 3:
+            if len(top_three) == 0:
+                top_three.append(item)
+            elif len(top_three) == 1:
+                if item['expense'] > top_three[0]['expense']:
+                    top_three.insert(0, item)
+                else:
+                    top_three.append(item)
+            elif len(top_three) == 2:
+                if item['expense'] > top_three[0]['expense']:
+                    top_three.insert(0, item)
+                elif item['expense'] > top_three[1]['expense']:
+                    top_three.insert(1, item)
+                else:
+                    top_three.append(item)
+        else:
+            if item['expense'] > top_three[0]['expense']:
+                top_three.insert(0, item)
+            elif item['expense'] > top_three[1]['expense']:
+                top_three.insert(1, item)
+            elif item['expense'] > top_three[2]['expense']:
+                top_three.insert(2, item)
+
+    return jsonify(categories=top_three[0:3])

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Typography, Divider, FormControl, MenuItem, Select, InputLabel, Grid } from '@material-ui/core';
+import { Typography, Divider, Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from "@material-ui/core/Paper";
 
@@ -7,10 +7,14 @@ import TopCategoriesItem from "./TopCategoriesItem"
 
 const useStyles = theme => ({
   root: {
-    flexGrow: 1,
+    flexGrow: 0,
+    width: 350
   },
   content: {
-    flexGrow: 1
+    height: 256
+  },
+  title: {
+    padding: theme.spacing(2)
   }
 })
 
@@ -50,7 +54,9 @@ class TopCategoriesModule extends Component {
     return (
       <Grid className={classes.root}>
         <Paper className={classes.content}>
-          <Typography paragraph>TOP CATEGORIES</Typography>
+          <div className={classes.title}>
+            <Typography >TOP CATEGORIES</Typography>
+          </div>
           <Divider />
           <TopCategoriesItem topCategories={this.state.topCategories} />
         </Paper>

@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Typography, Divider, FormControl, MenuItem, Select, InputLabel } from '@material-ui/core';
+import { Typography } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 import Paper from "@material-ui/core/Paper";
 

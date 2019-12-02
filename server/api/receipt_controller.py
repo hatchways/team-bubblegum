@@ -92,8 +92,7 @@ def get_daily_expenses_of_month(year, month):
     daily_expenses = []
     for date in range(1, end + 1):
         daily_total = get_all_receipts(year, month, date)
-        date_str = datetime.strftime(dt.datetime(year, month, date), '%b %d')
-        daily_expenses.append({'date': date_str,
+        daily_expenses.append({'date': {'year': year, 'month': month - 1, 'date': date},
                                'expense': float(daily_total.json['total_amount'])})
     return jsonify(data=daily_expenses)
 
