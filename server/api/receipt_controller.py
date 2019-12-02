@@ -3,6 +3,9 @@ from models import db, Receipt
 import datetime as dt
 from datetime import datetime
 import calendar
+from config import S3_LOCATION, S3_BUCKET_NAME
+from werkzeug import secure_filename
+from app import s3
 
 receipt_controller = Blueprint('receipt_controller',
                                __name__, url_prefix='/receipts')
@@ -127,3 +130,23 @@ def update_receipt(id):
     if failed:
         return jsonify({"Error": "Failed to update receipt"})
     return jsonify({"Success": "Receipt updated"})
+
+@receipt_controller.route('/images', methods=["POST"])
+def upload_images():
+    if request.method == "POST":
+        all_images = request.files.getlist('files')
+        image_locations = []
+        try:
+            for image in all_images:
+                filename = secure_filename(image.filename)
+                image.save(filename)
+                s3.upload_file(
+                    Bucket = S3_BUCKET_NAME,
+                    Filename=filename,
+                    Key=filename
+                )
+                image_locations.append("{}{}".format(S3_LOCATION, filename))
+            return jsonify({'locations': image_locations})
+        except Exception as e:
+            print(e)
+            return jsonify({'did not': 'work'})

@@ -21,7 +21,8 @@ class CreateReceipt extends Component {
     title: '',
     amount: 0,
     category: '',
-    receipt_date: ''
+    receipt_date: '',
+    pic_url: this.props.imgUrls
   }
 
   onFormChange = (e) => {
@@ -35,7 +36,7 @@ class CreateReceipt extends Component {
 
   onBtnClick = () => {
     console.log(this.state);
-    fetch("/receipt", {
+    fetch("/receipts/", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(this.state)
@@ -49,7 +50,7 @@ class CreateReceipt extends Component {
       })
       .catch(err => {
         console.log(err);
-      });
+      })
   };
 
   render() {

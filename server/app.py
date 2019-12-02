@@ -14,6 +14,12 @@ db.init_app(app)
 with app.app_context():
     db.create_all()
 
+s3 = boto3.client(
+    "s3",
+    aws_access_key_id=S3_ACCESS_KEY,
+    aws_secret_access_key=S3_SECRET_KEY
+)
+
 app.register_blueprint(home_handler)
 app.register_blueprint(ping_handler)
 app.register_blueprint(receipt_controller)
