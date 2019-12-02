@@ -30,7 +30,8 @@ const useStyles = theme => ({
     cursor: 'pointer',
     background: '#F3F5FB',
     padding: 20,
-    width: 400
+    width: 400,
+    textAlign: 'center'
   },
   divider: {
     border: '2px solid black',
@@ -42,6 +43,9 @@ const useStyles = theme => ({
     maxWidth: 160,
     height: 120,
     margin: '50px 0'
+  },
+  dropText: {
+    margin: 12
   }
 });
 
@@ -61,10 +65,8 @@ class UploadReceipt extends Component {
       imagesList.append('files', this.state.images[i]);
     }
     console.log(this.state);
-    /*
     fetch("/receipts/images", {
       method: "POST",
-      // headers: { "Content-Type": "multipart/form-data" },
       body: imagesList
     })
       .then(res => {
@@ -78,7 +80,6 @@ class UploadReceipt extends Component {
       .catch(err => {
         console.log(err);
       })
-    */
   };
 
   render() {
@@ -108,8 +109,8 @@ class UploadReceipt extends Component {
                     onDragOver={(e) => e.preventDefault()}
                   >
                     <CardMedia style={{marginLeft: 'auto', marginRight: 'auto'}} image={DragDropIcon} title="Drag and Drop Icon" className={classes.image} /><br />
-                    <Typography style={{margin: 12}} variant="h5" align="center">Drop files here</Typography>
-                    <Typography style={{margin: 12}} variant="body1" align="center">or</Typography>
+                    <Typography className={classes.dropText} variant="h5">Drop files here</Typography>
+                    <Typography className={classes.dropText} variant="body1">or</Typography>
                     <Grid container direction="column" alignItems="center">
                       <Grid item xs={12}>
                         <Button variant="contained" component="span" className={classes.select}>Take a photo</Button>
