@@ -47,7 +47,8 @@ def get_all_receipts(year=None, month=None, date=None, weekly=False,
 
     # if user provides start and end dates
     if request.args.get('start_date') is not None and request.args.get('end_date') is not None:
-        start_date = datetime.strptime(request.args.get('start_date'), '%Y-%m-%d')
+        start_date = datetime.strptime(
+            request.args.get('start_date'), '%Y-%m-%d')
         end_date = datetime.strptime(request.args.get('end_date'), '%Y-%m-%d')
     # show all receipts
     elif year is None and month is None and date is None:

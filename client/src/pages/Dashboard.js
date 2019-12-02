@@ -1,9 +1,9 @@
-import React, { Component } from 'react';
-import { Typography, Divider } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import React, { Component } from "react";
+import { Typography, Divider } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
 
-import RecentTransactionsModule from "./RecentTransactionsModule"
-import DashboardMonthlySummary from "./DashboardMonthlySummary"
+import RecentTransactionsModule from "./RecentTransactionsModule";
+import DashboardMonthlySummary from "./DashboardMonthlySummary";
 
 const useStyles = theme => ({
   root: {
@@ -11,7 +11,7 @@ const useStyles = theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(3, 35),
+    padding: theme.spacing(0, 40)
   },
   toolbar: theme.mixins.toolbar
 });
