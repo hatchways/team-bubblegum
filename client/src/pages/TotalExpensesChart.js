@@ -9,7 +9,6 @@ import {
   SplineSeries
 } from "@devexpress/dx-react-chart-material-ui";
 import { ArgumentScale } from '@devexpress/dx-react-chart';
-import { scaleTime } from 'd3-scale';
 
 const useStyles = theme => ({
   root: {
@@ -23,8 +22,6 @@ const useStyles = theme => ({
     padding: theme.spacing(2)
   }
 });
-
-const format = obj => obj.tickFormat();
 
 class TotalExpensesChart extends Component {
   state = {
@@ -40,7 +37,7 @@ class TotalExpensesChart extends Component {
     .then(results => {
       this.setState({
         dailyExpenses: results.data.map(item => ({
-          date: new Date(item.date['year'], item.date['month'], item.date['date']),
+          date: item.date['date'],
           expense: item.expense
         }))
       })
@@ -56,7 +53,7 @@ class TotalExpensesChart extends Component {
       .then(results => {
         this.setState({
           dailyExpenses: results.data.map(item => ({
-            date: new Date(item.date['year'], item.date['month'], item.date['date']),
+            date: item.date['date'],
             expense: item.expense
           }))
         })
@@ -73,8 +70,8 @@ class TotalExpensesChart extends Component {
             <Typography>TOTAL EXPENSES</Typography>
           </div>
           <Chart data={this.state.dailyExpenses} width={350} height={200}>
-            <ArgumentScale factory={scaleTime}  />
-            <ArgumentAxis tickFormat={format}/>
+            <ArgumentScale />
+            <ArgumentAxis />
             <ValueAxis />
 
             <SplineSeries valueField="expense" argumentField="date" />
