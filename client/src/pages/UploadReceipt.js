@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
-import { Grid, FormControl, Button, Typography, Paper, CardMedia } from '@material-ui/core';
+import { Grid, FormControl, Button, Typography, CardMedia } from '@material-ui/core';
+import DeleteIcon from '@material-ui/icons/Delete';
 import { withStyles } from '@material-ui/core/styles';
 import DragDropIcon from '../drag-and-drop-icon.png';
 
@@ -9,24 +10,25 @@ const useStyles = theme => ({
   },
   paper: {
     margin: '30px 0',
-    padding: 20
+    padding: 20,
+    border: 'white'
   },
   file: {
     display: 'none'
   },
   submit: {
-    color: 'lightgreen',
+    color: '#4FD093',
     padding: '12px 50px'
   },
   select: {
-    margin: 'auto',
-    padding: 10,
-    margin: '20px 0',
+    background: '#1B3460',
+    color: 'white',
+    padding: '10px 20px',
+    margin: '20px auto'
   },
   drop: {
-    border: '2px solid black',
     cursor: 'pointer',
-    background: 'pink',
+    background: '#F3F5FB',
     padding: 20,
     width: 400
   },
@@ -51,7 +53,6 @@ class UploadReceipt extends Component {
 
   onFormChange = (e) => {
     this.setState({ [e.target.name]: e.target.files, selectedImages: URL.createObjectURL(e.target.files[0]) });
-    console.log(this.state);
   }
 
   onBtnClick = () => {
@@ -59,6 +60,8 @@ class UploadReceipt extends Component {
     for (let i = 0; i < this.state.images.length; i++) {
       imagesList.append('files', this.state.images[i]);
     }
+    console.log(this.state);
+    /*
     fetch("/receipts/images", {
       method: "POST",
       // headers: { "Content-Type": "multipart/form-data" },
@@ -75,6 +78,7 @@ class UploadReceipt extends Component {
       .catch(err => {
         console.log(err);
       })
+    */
   };
 
   render() {
@@ -83,17 +87,18 @@ class UploadReceipt extends Component {
       <div className={classes.root}>
         <Grid container spacing={3}>
           <Grid item xs={6}>
-            <Paper className={classes.paper}>
-              <Typography style={{color: 'blue', margin: 30}} variant="h4">Upload Receipt</Typography>
+            <div className={classes.paper}>
+              <Typography style={{color: '#1A3360', margin: 30, fontWeight: 'bold'}} variant="h4">Upload receipt</Typography>
               <Typography style={{color: 'gray', marginLeft: 30}} variant="body1">Upload one or more receipt(s)</Typography>
               <CardMedia image={this.state.selectedImages} title="receipt image" className={classes.image} />
+              {this.state.selectedImages && <DeleteIcon />}
               <Button variant="outlined" className={classes.submit} onClick={this.onBtnClick} >Submit</Button>
-            </Paper>
+            </div>
           </Grid>
-          <Grid item xs={6} alignItems="center">
-            <Paper className={classes.paper}>
+          <Grid item xs={6}>
+            <div className={classes.paper}>
               <FormControl>
-                <label>
+                <label htmlFor="raised-button-file">
                   <div 
                     className={classes.drop}
                     onDrop={(e) => {
@@ -105,11 +110,16 @@ class UploadReceipt extends Component {
                     <CardMedia style={{marginLeft: 'auto', marginRight: 'auto'}} image={DragDropIcon} title="Drag and Drop Icon" className={classes.image} /><br />
                     <Typography style={{margin: 12}} variant="h5" align="center">Drop files here</Typography>
                     <Typography style={{margin: 12}} variant="body1" align="center">or</Typography>
-                    <input type="file" name="images" accept="image/*" onChange={this.onFormChange} multiple />
+                    <Grid container direction="column" alignItems="center">
+                      <Grid item xs={12}>
+                        <Button variant="contained" component="span" className={classes.select}>Take a photo</Button>
+                      </Grid>
+                    </Grid>
                   </div>
                 </label>
+                <input type="file" id="raised-button-file" name="images" accept="image/*" onChange={this.onFormChange} style={{display: 'none'}} multiple />
               </FormControl>
-            </Paper>
+            </div>
           </Grid>
         </Grid>
       </div>
