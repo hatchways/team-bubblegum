@@ -2,9 +2,6 @@ import React, { Component } from 'react';
 import { Typography, Divider } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
-import RecentTransactionsModule from "./RecentTransactionsModule"
-import DashboardMonthlySummary from "./DashboardMonthlySummary"
-
 const useStyles = theme => ({
   root: {
     flexGrow: 1
@@ -16,22 +13,17 @@ const useStyles = theme => ({
   toolbar: theme.mixins.toolbar
 });
 
-class Dashboard extends Component {
+class Reports extends Component {
   render() {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
-          <Typography variant="h4">Dashboard</Typography>
+          <Typography variant="h4">Reports</Typography>
           <Divider />
           <Typography paragraph>SOME COOL STUFF HERE</Typography>
-          <DashboardMonthlySummary />
-          <RecentTransactionsModule />
-        </main>
       </div>
     );
   }
 }
 
-export default withStyles(useStyles)(Dashboard);
+export default withStyles(useStyles)(Reports);

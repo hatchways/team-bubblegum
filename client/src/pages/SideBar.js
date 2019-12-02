@@ -1,10 +1,9 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
 import { makeStyles } from '@material-ui/core/styles';
-import { Drawer, CssBaseline, List, Divider, ListItem, ListItemIcon, ListItemText } from '@material-ui/core';
-import InboxIcon from '@material-ui/icons/MoveToInbox';
-import MailIcon from '@material-ui/icons/Mail';
+import { Button, Typography, Drawer, CssBaseline, List, ListItem } from '@material-ui/core';
 
-const drawerWidth = 240;
+const drawerWidth = 280;
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -13,14 +12,30 @@ const useStyles = makeStyles(theme => ({
   drawer: {
     width: drawerWidth,
     flexShrink: 0,
+    zIndex: theme.zIndex.drawer + 1
   },
   drawerPaper: {
     width: drawerWidth,
+    background: "white"
   },
-  toolbar: theme.mixins.toolbar,
+  title: {
+    background: "#314E84",
+    color: "white",
+    padding: 30
+  },
+  sideBar: {
+    background: "#1A345F",
+    color: "white",
+    height: "100vh",
+    paddingTop: 20
+  },
+  sideButton: {
+    color: "white",
+    marginLeft: 40,
+  }
 }));
 
-function SideBar() {
+function SideBar(props) {
   const classes = useStyles();
 
   return (
@@ -33,24 +48,18 @@ function SideBar() {
           paper: classes.drawerPaper,
         }}
       >
-        <div className={classes.toolbar} />
-        <List>
-          {['SOME', 'LINKS', 'IN', 'SIDEBAR'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
-        <Divider />
-        <List>
-          {['I AM', 'JUST', 'HERE'].map((text, index) => (
-            <ListItem button key={text}>
-              <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-              <ListItemText primary={text} />
-            </ListItem>
-          ))}
-        </List>
+        <div className={classes.title}>
+          <Typography align="center"><img alt="pic" />RECEIPT TRACKER</Typography>
+        </div>
+        <div className={classes.sideBar}>
+          <List>
+            {['Dashboard', 'Reports', 'Receipts'].map((text, index) => (
+              <ListItem key={text}>
+                <Button component={ Link } to={"/home/" + text} className={classes.sideButton}>{text}</Button>
+              </ListItem>
+            ))}
+          </List>
+        </div>
       </Drawer>
     </div>
   );

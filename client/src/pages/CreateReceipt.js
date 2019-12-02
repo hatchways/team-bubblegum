@@ -6,14 +6,6 @@ const useStyles = theme => ({
   root: {
     flexGrow: 1
   },
-  button: {
-    margin: theme.spacing(1, 0),
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(3, 35),
-  },
-  toolbar: theme.mixins.toolbar
 });
 
 class CreateReceipt extends Component {
@@ -45,7 +37,8 @@ class CreateReceipt extends Component {
       })
       .then(data => {
         console.log(data);
-        this.props.history.push("/");
+        this.props.setPage("upload");
+        this.props.handleClose();
       })
       .catch(err => {
         console.log(err);
@@ -56,26 +49,23 @@ class CreateReceipt extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <main className={classes.content}>
-          <div className={classes.toolbar} />
-          <Typography variant="h4">Add a Receipt</Typography>
-          <Divider />
+        <Typography variant="h4">Add a Receipt</Typography>
+        <Divider />
+        <FormControl>
+          <TextField label={"Title"} name={"title"} onChange={this.onFormChange} />
+          <TextField label={"Amount"} name={"amount"} onChange={this.onFormChange} />
           <FormControl>
-            <TextField label={"Title"} name={"title"} onChange={this.onFormChange} />
-            <TextField label={"Amount"} name={"amount"} onChange={this.onFormChange} />
-            <FormControl>
-            <InputLabel>Category</InputLabel>
-            <Select name={"category"} value={this.state.category} onChange={this.onFormChange} >
-              <MenuItem value={"Food"} >Food</MenuItem>
-              <MenuItem value={"Merchandise"} >Merchandise</MenuItem>
-              <MenuItem value={"Travel"} >Travel</MenuItem>
-              <MenuItem value={"Other"} >Other</MenuItem>
-            </Select>
-            </FormControl>
-            <TextField type="date" label={"Purchase Date"} name={"receipt_date"} onChange={this.onFormChange} InputLabelProps={{shrink: true}} />
-          </FormControl><br />
-          <Button className={classes.button} onClick={this.onBtnClick} >Submit</Button>
-        </main>
+          <InputLabel>Category</InputLabel>
+          <Select name={"category"} value={this.state.category} onChange={this.onFormChange} >
+            <MenuItem value={"Food"} >Food</MenuItem>
+            <MenuItem value={"Merchandise"} >Merchandise</MenuItem>
+            <MenuItem value={"Travel"} >Travel</MenuItem>
+            <MenuItem value={"Other"} >Other</MenuItem>
+          </Select>
+          </FormControl>
+          <TextField type="date" label={"Purchase Date"} name={"receipt_date"} onChange={this.onFormChange} InputLabelProps={{shrink: true}} />
+        </FormControl><br />
+        <Button className={classes.button} onClick={this.onBtnClick} >Submit</Button>
       </div>
     );
   }
