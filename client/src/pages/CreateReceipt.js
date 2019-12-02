@@ -6,33 +6,14 @@ const useStyles = theme => ({
   root: {
     flexGrow: 1
   },
-  button: {
-    margin: theme.spacing(1, 0),
-  },
-  content: {
-    flexGrow: 1,
-    padding: theme.spacing(0, 40),
-  },
-  toolbar: theme.mixins.toolbar,
-  paper: {
-    position: 'absolute',
-    width: 400,
-    backgroundColor: theme.palette.background.paper,
-    border: '2px solid #000',
-    boxShadow: theme.shadows[5],
-    padding: theme.spacing(2, 4, 3),
-  },
 });
 
 class CreateReceipt extends Component {
   state = {
-    formData: {
-      title: '',
-      amount: 0,
-      category: '',
-      receipt_date: ''
-    },
-    open: false
+    title: '',
+    amount: 0,
+    category: '',
+    receipt_date: ''
   }
 
   onFormChange = (e) => {
@@ -56,7 +37,8 @@ class CreateReceipt extends Component {
       })
       .then(data => {
         console.log(data);
-        this.props.history.push("/");
+        this.props.setPage("upload");
+        this.props.handleClose();
       })
       .catch(err => {
         console.log(err);

@@ -1,11 +1,11 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Route } from 'react-router-dom';
 import TopBar from './TopBar';
 import SideBar from './SideBar';
 import Dashboard from './Dashboard';
 import Reports from './Reports';
 import Receipts from './Receipts';
-import CreateReceipt from './CreateReceipt';
+import UploadReceipt from './UploadReceipt';
 import { makeStyles } from '@material-ui/core/styles';
 
 const useStyles = makeStyles(theme => ({
@@ -31,7 +31,7 @@ function Home() {
         <Route path="/home/dashboard" component={Dashboard} />
         <Route path="/home/reports" component={Reports} />
         <Route path="/home/receipts" component={Receipts} />
-        <Route path="/home/create" component={CreateReceipt} />
+        <Route path="/home/upload" component={UploadReceipt} />
       </main>
     </div>
   );

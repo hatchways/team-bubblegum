@@ -13,6 +13,7 @@ psycopg2 = "*"
 pyjwt = "*"
 email-validator = "*"
 psycopg2-binary = "*"
+boto3 = "*"
 
 [requires]
 python_version = "3.7"
