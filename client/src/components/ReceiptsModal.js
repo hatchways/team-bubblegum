@@ -18,11 +18,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-export default function ReceiptsModal({
-  handleClose,
-  open,
-  message
-}) {
+export default function ReceiptsModal({ handleClose, open, data }) {
   const classes = useStyles();
 
   return (
@@ -41,8 +37,8 @@ export default function ReceiptsModal({
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id='transition-modal-title'>Transition modal</h2>
-            <p id='transition-modal-description'>{message}</p>
+            <h2 id='transition-modal-title'>{data.title}</h2>
+            <p id='transition-modal-description'>{data.receipt_date}</p>
           </div>
         </Fade>
       </Modal>

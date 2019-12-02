@@ -32,9 +32,10 @@ const useStyles = theme => ({
 
 const Receipts = props => {
   const { classes } = props;
-  const [data, setData] = useState([]);
+  const [receiptData, setReceiptData] = useState([]);
   const [open, setOpen] = useState(false);
   const [modalData, setModalData] = useState({});
+  const [month, setMonth] = useState('All')
   const months = [
     'January',
     'February',
@@ -50,28 +51,29 @@ const Receipts = props => {
     'December'
   ];
 
-  // useEffect(() => {
-  //   console.log('in use effect');
-  //   fetch('/receipts', {
-  //     method: 'GET',
-  //     headers: {
-  //       'Content-Type': 'application/json'
-  //     }
-  //   })
-  //     .then(response => {
-  //       return response.json();
-  //     })
-  //     .then(text => {
-  //       console.log(text);
-  //     });
-  // }, []);
+  useEffect(() => {
+    const fetchReceipts = async () => {
+      const response = await fetch('/receipts/');
+      const jsonResponse = await response.json();
 
-  const handleOpen = () => {
+      await setReceiptData(jsonResponse);
+      console.log(receiptData, jsonResponse);
+    };
+
+    fetchReceipts();
+  }, []);
+
+  const handleOpen = receipt => {
+    setModalData(receipt);
     setOpen(true);
   };
-
   const handleClose = () => {
+    setModalData({});
     setOpen(false);
+  };
+  const handleMonthChange = month => {
+    setMonth(month);
+    // Make new api call with the updated month
   };
 
   console.log(props);
@@ -83,67 +85,39 @@ const Receipts = props => {
           <Typography variant='h4'>Receipts</Typography>
         </Grid>
         <Grid item>
-          <ReceiptsSelect months={months} />
+        <ReceiptsSelect
+            month={month}
+            months={months}
+            handleMonthChange={handleMonthChange}
+          />
         </Grid>
       </Grid>
       <Divider />
       <ReceiptsModal
         handleClose={handleClose}
         open={open}
-        message={'Testhing one two three'}
+        // message={modalData.title}
+        data={modalData}
       />
-      {/* <Paper> */}
       <Grid container direction='row' spacing={3}>
-        <Grid item md={4}>
-          <Card>
-            <CardActionArea>
-              <CardMedia
-                image='https://source.unsplash.com/random'
-                style={{ height: '200px' }}
-                // onclick it will set its info with setModalInfo
-                onClick={handleOpen}
-              ></CardMedia>
-              <CardContent className={classes.textCenter}>
-                <Typography>This is my image</Typography>
-              </CardContent>
-            </CardActionArea>
-          </Card>
-        </Grid>
-        <Grid item md={4}>
-          <Card>
-            <CardActionArea>
-              <CardMedia
-                image='https://source.unsplash.com/random'
-                style={{ height: '200px' }}
-              ></CardMedia>
-              <Typography>This is my image</Typography>
-            </CardActionArea>
-          </Card>
-        </Grid>
-        <Grid item md={4}>
-          <Card>
-            <CardActionArea>
-              <CardMedia
-                image='https://source.unsplash.com/random'
-                style={{ height: '200px' }}
-              ></CardMedia>
-              <Typography>This is my image</Typography>
-            </CardActionArea>
-          </Card>
-        </Grid>
-        <Grid item md={4}>
-          <Card>
-            <CardActionArea>
-              <CardMedia
-                image='https://source.unsplash.com/random'
-                style={{ height: '200px' }}
-              ></CardMedia>
-              <Typography>This is my image</Typography>
-            </CardActionArea>
-          </Card>
-        </Grid>
+        {receiptData.posts &&
+          receiptData.posts.map(receipt => (
+            <Grid item md={4}>
+              <Card>
+                <CardActionArea>
+                  <CardMedia
+                    image={receipt.pic_url}
+                    style={{ height: '200px' }}
+                    onClick={() => handleOpen(receipt)}
+                  ></CardMedia>
+                  <CardContent className={classes.textCenter}>
+                    <Typography>{receipt.receipt_date}</Typography>
+                  </CardContent>
+                </CardActionArea>
+              </Card>
+            </Grid>
+          ))}
       </Grid>
-      {/* </Paper> */}
     </div>
   );
 };
