@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from models import db, Receipt
+from models import db, Receipt, Image
 import datetime
 import calendar
 from config import S3_LOCATION, S3_BUCKET_NAME
@@ -28,7 +28,7 @@ def create():
     try:
         db.session.commit()
         # AFTER SUCCESSFUL RECEIPT CREATION, ADD IMAGES
-        for image in receipt_data['pic_url']:
+        for image in receipt_data['pic_urls']:
             new_image = Image(location=image, receipt=receipt)
             db.session.add(new_image)
             try:
