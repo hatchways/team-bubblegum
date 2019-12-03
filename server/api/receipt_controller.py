@@ -18,10 +18,8 @@ def create():
     title = receipt_data['title']
     category = receipt_data['category']
     receipt_date = receipt_data['receipt_date']
-    pic_url = receipt_data['pic_url']
 
-    receipt = Receipt(amount=amount, title=title, receipt_date=receipt_date,
-                      pic_url=pic_url, category=category)
+    receipt = Receipt(amount=amount, title=title, receipt_date=receipt_date, category=category)
     db.session.add(receipt)
 
     failed = False
@@ -58,7 +56,7 @@ def get_all_receipts(year, month):
         receipts = Receipt.query.all()
         # Receipt.query.all() returns empty list if there are no records
         if receipts == []:
-            return receipts
+            return jsonify({'receipts': receipts})
     elif year is not None and month is not None:
         num_days = calendar.monthrange(year, month)[1]
         start_date = datetime.date(year, month, 1)

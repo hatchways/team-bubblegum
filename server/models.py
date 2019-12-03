@@ -17,7 +17,7 @@ class Receipt(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     images = db.relationship('Image', backref='receipt')
 
-    def __init__(self, amount, title, receipt_date, pic_url, category=None):
+    def __init__(self, amount, title, receipt_date, category=None):
         self.amount = amount
         self.title = title
         self.category = category
@@ -34,9 +34,9 @@ class Receipt(db.Model):
                 'amount': str(self.amount),
                 'cateogory': self.category,
                 'receipt_date': self.receipt_date,
-                'pic_url': self.pic_url,
                 'date_created': self.date_created,
-                'user_id': self.user_id}
+                'user_id': self.user_id,
+                'images': [image.to_dict() for image in self.images]}
 
 class Image(db.Model):
     __tablename__ = 'image'
@@ -50,7 +50,7 @@ class Image(db.Model):
     def to_dict(self):
         return {
             'id': self.id,
-            'location': self.url,
+            'location': self.location,
             'receipt_id': self.receipt_id
             'user_id': self.user_id
         }

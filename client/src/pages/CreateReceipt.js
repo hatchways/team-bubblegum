@@ -14,7 +14,7 @@ class CreateReceipt extends Component {
     amount: 0,
     category: '',
     receipt_date: '',
-    pic_url: this.props.imgUrls
+    pic_urls: this.props.imgUrls
   }
 
   onFormChange = (e) => {

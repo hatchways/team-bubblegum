@@ -109,7 +109,7 @@ class UploadReceipt extends Component {
               <Typography style={{color: 'gray', marginLeft: 30}} variant="body1">Upload one or more receipt(s)</Typography>
               <div className={classes.imageContainer}>
                 {selectedImages.map((image, index) => {
-                  return <CardMedia image={image} title="receipt image" className={classes.image} />
+                  return <CardMedia key={index} image={image} title="receipt image" className={classes.image} />
                 })}
                 {this.state.selectedImages && <DeleteIcon />}
               </div>
