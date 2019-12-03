@@ -1,6 +1,7 @@
 import os
 
 TEAM_NAME = os.environ['TEAM_NAME']
+SECRET_KEY = os.environ['SECRET_KEY']
 
 DB_USERNAME = os.environ['DB_USERNAME']
 DB_PASSWORD = os.environ['DB_PASSWORD']
