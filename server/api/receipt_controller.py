@@ -27,6 +27,16 @@ def create():
     failed = False
     try:
         db.session.commit()
+        # AFTER SUCCESSFUL RECEIPT CREATION, ADD IMAGES
+        for image in receipt_data['pic_url']:
+            new_image = Image(location=image, receipt=receipt)
+            db.session.add(new_image)
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                db.session.flush()
+                return jsonify({"Error": "Failed to add image(s)"})
     except Exception as e:
         db.session.rollback()
         db.session.flush()

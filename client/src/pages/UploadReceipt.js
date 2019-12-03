@@ -39,9 +39,13 @@ const useStyles = theme => ({
     height: 180,
     margin: '30px 0'
   },
+  imageContainer: {
+    width: 400,
+    height: 240
+  },
   image: {
-    maxWidth: 160,
-    height: 120,
+    maxWidth: 120,
+    height: 90,
     margin: '50px 0'
   },
   dropText: {
@@ -56,7 +60,13 @@ class UploadReceipt extends Component {
   }
 
   onFormChange = (e) => {
-    this.setState({ [e.target.name]: e.target.files, selectedImages: URL.createObjectURL(e.target.files[0]) });
+    let imageList = [];
+    let urlObject;
+    for (let i = 0; i < e.target.files.length; i++) {
+      urlObject = URL.createObjectURL(e.target.files[i]);
+      imageList.push(urlObject);
+    }
+    this.setState({ [e.target.name]: e.target.files, selectedImages: imageList });
   }
 
   onBtnClick = () => {
@@ -84,6 +94,12 @@ class UploadReceipt extends Component {
 
   render() {
     const { classes } = this.props;
+    let selectedImages;
+    if (this.state.selectedImages) {
+      selectedImages = this.state.selectedImages;
+    } else {
+      selectedImages = [];
+    }
     return (
       <div className={classes.root}>
         <Grid container spacing={3}>
@@ -91,8 +107,12 @@ class UploadReceipt extends Component {
             <div className={classes.paper}>
               <Typography style={{color: '#1A3360', margin: 30, fontWeight: 'bold'}} variant="h4">Upload receipt</Typography>
               <Typography style={{color: 'gray', marginLeft: 30}} variant="body1">Upload one or more receipt(s)</Typography>
-              <CardMedia image={this.state.selectedImages} title="receipt image" className={classes.image} />
-              {this.state.selectedImages && <DeleteIcon />}
+              <div className={classes.imageContainer}>
+                {selectedImages.map((image, index) => {
+                  return <CardMedia image={image} title="receipt image" className={classes.image} />
+                })}
+                {this.state.selectedImages && <DeleteIcon />}
+              </div>
               <Button variant="outlined" className={classes.submit} onClick={this.onBtnClick} >Submit</Button>
             </div>
           </Grid>
