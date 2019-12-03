@@ -1,8 +1,11 @@
 from flask import Blueprint, request, jsonify
-from models import db, Receipt
+from models import db, Receipt, Image
 import datetime as dt
 from datetime import datetime
 import calendar
+from config import S3_LOCATION, S3_BUCKET_NAME
+from werkzeug import secure_filename
+from app import s3
 
 receipt_controller = Blueprint('receipt_controller',
                                __name__, url_prefix='/receipts')
@@ -16,15 +19,23 @@ def create():
     title = receipt_data['title']
     category = receipt_data['category']
     receipt_date = receipt_data['receipt_date']
-    pic_url = receipt_data['pic_url']
 
-    receipt = Receipt(amount=amount, title=title, receipt_date=receipt_date,
-                      pic_url=pic_url, category=category)
+    receipt = Receipt(amount=amount, title=title, receipt_date=receipt_date, category=category)
     db.session.add(receipt)
 
     failed = False
     try:
         db.session.commit()
+        # AFTER SUCCESSFUL RECEIPT CREATION, ADD IMAGES
+        for image in receipt_data['pic_urls']:
+            new_image = Image(location=image, receipt=receipt)
+            db.session.add(new_image)
+            try:
+                db.session.commit()
+            except Exception as e:
+                db.session.rollback()
+                db.session.flush()
+                return jsonify({"Error": "Failed to add image(s)"})
     except Exception as e:
         db.session.rollback()
         db.session.flush()
@@ -44,7 +55,7 @@ def get_all_receipts(year=None, month=None, date=None, weekly=False,
     if request.args.get('weekly') is not None:
         weekly = int(request.args.get('weekly'))
     total_amount = 0
-
+    
     # if user provides start and end dates
     if request.args.get('start_date') is not None and request.args.get('end_date') is not None:
         start_date = datetime.strptime(
@@ -128,3 +139,23 @@ def update_receipt(id):
     if failed:
         return jsonify({"Error": "Failed to update receipt"})
     return jsonify({"Success": "Receipt updated"})
+
+@receipt_controller.route('/images', methods=["POST"])
+def upload_images():
+    if request.method == "POST":
+        all_images = request.files.getlist('files')
+        image_locations = []
+        try:
+            for image in all_images:
+                filename = secure_filename(image.filename)
+                image.save(filename)
+                s3.upload_file(
+                    Bucket = S3_BUCKET_NAME,
+                    Filename=filename,
+                    Key=filename
+                )
+                image_locations.append("{}{}".format(S3_LOCATION, filename))
+            return jsonify({'locations': image_locations})
+        except Exception as e:
+            print(e)
+            return jsonify({'did not': 'work'})

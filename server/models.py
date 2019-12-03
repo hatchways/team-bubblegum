@@ -27,16 +27,15 @@ class Receipt(db.Model):
     title = db.Column(db.String(100), nullable=False)
     category = db.Column(db.String)
     receipt_date = db.Column(db.Date, nullable=False)
-    pic_url = db.Column(db.String, nullable=False)
     date_created = db.Column(db.Date, default=date.today())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    images = db.relationship('Image', backref='receipt')
 
-    def __init__(self, amount, title, receipt_date, pic_url, category=None):
+    def __init__(self, amount, title, receipt_date, category=None):
         self.amount = amount
         self.title = title
         self.category = category
         self.receipt_date = receipt_date
-        self.pic_url = pic_url
         self.date_created = date.today()
 
     def __repr__(self):
@@ -49,6 +48,23 @@ class Receipt(db.Model):
                 'amount': str(self.amount),
                 'category': self.category,
                 'receipt_date': self.receipt_date,
-                'pic_url': self.pic_url,
                 'date_created': self.date_created,
-                'user_id': self.user_id}
+                'user_id': self.user_id,
+                'images': [image.to_dict() for image in self.images]}
+
+class Image(db.Model):
+    __tablename__ = 'image'
+
+    id = db.Column(db.Integer, primary_key=True)
+
+    location = db.Column(db.String(200), nullable=False)
+    receipt_id = db.Column(db.Integer, db.ForeignKey('receipt.id'), nullable=False)
+    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'location': self.location,
+            'receipt_id': self.receipt_id
+            'user_id': self.user_id
+        }
