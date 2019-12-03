@@ -1,6 +1,9 @@
-import React, { Component } from 'react';
-import { Typography, Divider } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import React, { Component } from "react";
+import { Typography, Divider } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+
+import RecentTransactionsModule from "./RecentTransactionsModule";
+import DashboardMonthlySummary from "./DashboardMonthlySummary";
 
 const useStyles = theme => ({
   root: {
@@ -8,7 +11,7 @@ const useStyles = theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(0, 40),
+    padding: theme.spacing(0, 40)
   },
   toolbar: theme.mixins.toolbar
 });
@@ -18,9 +21,14 @@ class Dashboard extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <Typography variant="h4">Dashboard</Typography>
-        <Divider />
-        <Typography paragraph>SOME COOL STUFF HERE</Typography>
+        <main className={classes.content}>
+          <div className={classes.toolbar} />
+          <Typography variant="h4">Dashboard</Typography>
+          <Divider />
+          <Typography paragraph>SOME COOL STUFF HERE</Typography>
+          <DashboardMonthlySummary />
+          <RecentTransactionsModule />
+        </main>
       </div>
     );
   }
