@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import { Typography, Divider } from '@material-ui/core';
+import { Typography, Divider, Button } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
 
 const useStyles = theme => ({
@@ -14,6 +14,23 @@ const useStyles = theme => ({
 });
 
 class Reports extends Component {
+  onBtnClick = () => {
+    fetch("/receipts/download")
+      .then(res => {
+        console.log(res);
+        res.blob().then(blob => {
+          let url = URL.createObjectURL(blob);
+          let a = document.createElement('a');
+          a.href = url;
+          a.download = 'python-csv.csv';
+          a.click();
+        })
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  };
+
   render() {
     const { classes } = this.props;
     return (
@@ -21,6 +38,7 @@ class Reports extends Component {
           <Typography variant="h4">Reports</Typography>
           <Divider />
           <Typography paragraph>SOME COOL STUFF HERE</Typography>
+          <Button variant="contained" color="primary" onClick={this.onBtnClick}>DOWNLOAD</Button>
       </div>
     );
   }
