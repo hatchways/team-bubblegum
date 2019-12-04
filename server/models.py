@@ -15,7 +15,7 @@ class Receipt(db.Model):
     receipt_date = db.Column(db.Date, nullable=False)
     pic_url = db.Column(db.String, nullable=False)
     date_created = db.Column(db.Date, default=date.today())
-    user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
+    # user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def __init__(self, amount, title, receipt_date, pic_url, category=None):
         self.amount = amount
@@ -37,4 +37,5 @@ class Receipt(db.Model):
                 'receipt_date': self.receipt_date,
                 'pic_url': self.pic_url,
                 'date_created': self.date_created,
-                'user_id': self.user_id}
+                # 'user_id': self.user_id}
+        }

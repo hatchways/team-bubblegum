@@ -1,9 +1,9 @@
 from flask import Flask
-from .api.ping_handler import ping_handler
-from .api.home_handler import home_handler
-from .api.receipt_controller import receipt_controller
-from .models import db
-from .config import DB_USERNAME, DB_PASSWORD, DB_NAME
+from api.ping_handler import ping_handler
+from api.home_handler import home_handler
+from api.receipt_controller import receipt_controller
+from models import db
+from config import DB_USERNAME, DB_PASSWORD, DB_NAME
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'postgresql://{}:{}@localhost/{}'.format(DB_USERNAME, DB_PASSWORD, DB_NAME)

@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from server.models import db, Receipt
+from models import db, Receipt
 import datetime
 import calendar
 
@@ -45,7 +45,7 @@ def get_all_receipts(year, month):
         receipts = Receipt.query.all()
         # Receipt.query.all() returns empty list if there are no records
         if receipts == []:
-            return receipts
+            return jsonify({'receipts' :receipts})
     elif year is not None and month is not None:
         num_days = calendar.monthrange(year, month)[1]
         start_date = datetime.date(year, month, 1)
