@@ -5,6 +5,7 @@ import SideBar from './SideBar';
 import Dashboard from './Dashboard';
 import Reports from './Reports';
 import Receipts from './Receipts';
+import Profile from './Profile';
 import CreateReceipt from './CreateReceipt';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
@@ -36,6 +37,7 @@ function Home() {
           <Route path='/home/reports' component={Reports} />
           <Route path='/home/receipts' component={Receipts} />
           <Route path='/home/create' component={CreateReceipt} />
+          <Route path='/home/profile' component={Profile} />
         </main>
       </Grid>
     </Grid>
