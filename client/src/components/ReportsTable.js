@@ -20,13 +20,13 @@ const useStyles = makeStyles({
     color: "#38CC89"
   },
   red: {
-    color: "#f50100"
+    color: "#f44336"
   },
   yellow: {
-    color: "#d2882b"
+    color: "#ffa726"
   },
   green: {
-    color: "#17c134"
+    color: "#76ff03"
   }
 });
 
@@ -43,9 +43,11 @@ export default function ReportsTable({ receiptData: { posts, total_amount } }) {
   } else if (monthlyIncome * 0.8 <= total_amount) {
     totalAmountColor = "yellow";
     reportSummary = "You have spent at least 80% of your income.";
-  } else {
+  } else if (monthlyIncome * 0.8 >= total_amount) {
     totalAmountColor = "green";
     reportSummary = "You have spent less than 80% of your income.";
+  } else {
+    reportSummary = "";
   }
 
   return (
@@ -60,7 +62,7 @@ export default function ReportsTable({ receiptData: { posts, total_amount } }) {
         </Box>
         <Box>
           <Typography variant='h5' className={classes[totalAmountColor]}>
-            {reportSummary}
+            {reportSummary ? reportSummary : ""}
           </Typography>
         </Box>
       </Toolbar>
