@@ -178,7 +178,6 @@ def download_csv():
             for row in rows:
                 writer.writerow(row)
         return send_file('python-csv.csv', attachment_filename='python-csv.csv', as_attachment=True)
-        return response
     except Exception as e:
         print(e)
         return jsonify({'Error': 'Failed to download'})
