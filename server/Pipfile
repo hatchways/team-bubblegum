@@ -14,6 +14,8 @@ pyjwt = "*"
 email-validator = "*"
 psycopg2-binary = "*"
 boto3 = "*"
+sendgrid = "*"
+certifi = "*"
 
 [requires]
 python_version = "3.7"

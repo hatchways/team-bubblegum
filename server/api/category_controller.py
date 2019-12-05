@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, jsonify
 from models import db, Receipt
 import datetime as dt
 import calendar
