@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React from 'react';
 import { Route } from 'react-router-dom';
 import TopBar from './TopBar';
 import SideBar from './SideBar';
@@ -7,6 +7,7 @@ import Reports from './Reports';
 import Receipts from './Receipts';
 import Profile from './Profile';
 import CreateReceipt from './CreateReceipt';
+import UploadReceipt from './UploadReceipt';
 import { makeStyles } from '@material-ui/core/styles';
 import { Grid } from '@material-ui/core';
 
@@ -32,13 +33,13 @@ function Home() {
       <Grid item sm={12} md={9}>
         <TopBar />
         <main className={classes.content}>
-          <div className={classes.toolbar} />
-          <Route path='/home/dashboard' component={Dashboard} />
-          <Route path='/home/reports' component={Reports} />
-          <Route path='/home/receipts' component={Receipts} />
-          <Route path='/home/create' component={CreateReceipt} />
-          <Route path='/home/profile' component={Profile} />
-        </main>
+        <div className={classes.toolbar} />
+        <Route path="/home/dashboard" component={Dashboard} />
+        <Route path="/home/reports" component={Reports} />
+        <Route path="/home/receipts" component={Receipts} />
+        <Route path="/home/upload" component={UploadReceipt} />
+        <Route path='/home/profile' component={Profile} />
+      </main>
       </Grid>
     </Grid>
   );
