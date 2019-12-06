@@ -53,9 +53,9 @@ function SideBar(props) {
         </div>
         <div className={classes.sideBar}>
           <List>
-            {['Dashboard', 'Reports', 'Receipts'].map((text, index) => (
+            {['dashboard', 'reports', 'receipts', 'profile'].map((text, index) => (
               <ListItem key={text}>
-                <Button component={ Link } to={"/home/" + text} className={classes.sideButton}>{text}</Button>
+                <Button component={ Link } to={"/home/" + text} className={classes.sideButton}>{text.toUpperCase()}</Button>
               </ListItem>
             ))}
           </List>
