@@ -22,8 +22,9 @@ def signup():
   except:
     return jsonify({'err': 'Account already exists'})
 
-  token = jwt.encode(body, SECRET_KEY).decode("utf-8")
-  return jsonify({'token': token})
+  token = jwt.encode(body["email"], SECRET_KEY).decode("utf-8")
+  find_user = User.query.filter_by(email=body['email']).first()
+  return jsonify({ 'token': token, 'user_id': find_user.id })
   
 @users.route('/login', methods=['POST'])
 def login():
@@ -33,8 +34,8 @@ def login():
     if find_user:
       is_authenticated = bcrypt.check_password_hash(find_user.password, body['password'])
       if is_authenticated:
-        token = jwt.encode(body, SECRET_KEY).decode("utf-8")
-        return jsonify({'token': token})
+        token = jwt.encode(body["email"], SECRET_KEY).decode("utf-8")
+        return jsonify({ 'token': token, 'user_id': find_user.id })
       else:
         return jsonify({'err': 'Invalid credentials'})
     else: 

@@ -1,5 +1,5 @@
 from flask import Flask
-from bcrypt_flask import Bcrypt
+from flask_bcrypt import Bcrypt
 from config import DB_USERNAME, DB_PASSWORD, DB_NAME, S3_ACCESS_KEY, S3_SECRET_KEY
 import boto3
 

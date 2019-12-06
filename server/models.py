@@ -65,6 +65,6 @@ class Image(db.Model):
         return {
             'id': self.id,
             'location': self.location,
-            'receipt_id': self.receipt_id
+            'receipt_id': self.receipt_id,
             'user_id': self.user_id
         }
