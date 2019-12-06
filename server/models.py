@@ -56,6 +56,7 @@ class Receipt(db.Model):
                 'user_id': self.user_id,
                 'images': [image.to_dict() for image in self.images]}
 
+
 class Image(db.Model):
     __tablename__ = 'image'
 

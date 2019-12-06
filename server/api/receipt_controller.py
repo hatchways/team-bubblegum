@@ -56,7 +56,7 @@ def get_all_receipts(year=None, month=None, date=None, weekly=False,
     if request.args.get('weekly') is not None:
         weekly = int(request.args.get('weekly'))
     total_amount = 0
-    
+
     # if user provides start and end dates
     if request.args.get('start_date') is not None and request.args.get('end_date') is not None:
         start_date = datetime.strptime(
@@ -151,7 +151,7 @@ def upload_images():
                 filename = secure_filename(image.filename)
                 image.save(filename)
                 s3.upload_file(
-                    Bucket = S3_BUCKET_NAME,
+                    Bucket=S3_BUCKET_NAME,
                     Filename=filename,
                     Key=filename
                 )
