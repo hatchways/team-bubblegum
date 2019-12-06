@@ -5,18 +5,29 @@ from app import bcrypt
 db = SQLAlchemy()
 
 class User(db.Model):
-  __tablename__ = 'user'
+    __tablename__ = 'user'
 
-  id = db.Column(db.Integer, primary_key=True)
-  email = db.Column(db.String(120), unique=True, nullable=False)
-  password = db.Column(db.String(200), nullable=False)
+    id = db.Column(db.Integer, primary_key=True)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(200), nullable=False)
+    receipts = db.relationship('Receipt', backref='user')
+    images = db.relationship('Image', backref='user')
 
-  def __init__(self, email, password):
-    self.email = email
-    self.password = bcrypt.generate_password_hash(password).decode('utf-8')
+    def __init__(self, email, password):
+        self.email = email
+        self.password = bcrypt.generate_password_hash(password).decode('utf-8')
 
-  def __repr__(self):
-    return '<User %r>' % self.email
+    def __repr__(self):
+        return '<User %r>' % self.email
+  
+    def to_dict(self):
+        return {
+            'id': self.id,
+            'email': self.email,
+            'password': self.password,
+            'receipts': [receipt.to_dict() for receipt in self.receipts],
+            'images': [image.to_dict() for image in self.images]
+        }
 
 class Receipt(db.Model):
     __tablename__ = 'receipt'
@@ -30,13 +41,6 @@ class Receipt(db.Model):
     date_created = db.Column(db.Date, default=date.today())
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     images = db.relationship('Image', backref='receipt')
-
-    def __init__(self, amount, title, receipt_date, category=None):
-        self.amount = amount
-        self.title = title
-        self.category = category
-        self.receipt_date = receipt_date
-        self.date_created = date.today()
 
     def __repr__(self):
         # return f"Receipt {self.id}, Title: {self.title}" < having syntax error
