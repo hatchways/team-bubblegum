@@ -6,7 +6,7 @@ import calendar
 from config import S3_LOCATION, S3_BUCKET_NAME
 from werkzeug import secure_filename
 from app import s3
-import users as usr
+import api.users as usr
 import requests
 
 receipt_controller = Blueprint('receipt_controller',
@@ -130,12 +130,13 @@ def get_daily_expenses_of_month(year, month):
 
     end = calendar.monthrange(year, month)[1]
     daily_expenses = []
-    url = request.url_root  # url = http://localhost:3000/receipts
+    url = request.url_root + "receipts/"  # url = http://localhost:3000/receipts
     for date in range(1, end + 1):
-        daily_total = requests.get(url + year + "/" + month + "/" + date,
-                                   headers={"Authorization": auth_header})
+        response = requests.get(url + str(year) + "/" + str(month) + "/" + str(date),
+                                headers={"Authorization": auth_header})
+        daily_total = response.json()
         daily_expenses.append({'date': {'year': year, 'month': month - 1, 'date': date},
-                               'expense': float(daily_total.json['total_amount'])})
+                               'expense': float(daily_total['total_amount'])})
     return jsonify(data=daily_expenses)
 
 

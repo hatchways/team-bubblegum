@@ -1,5 +1,5 @@
-import users as usr
-import emails as eml
+import api.users as usr
+import api.emails as eml
 
 def send_monthly_overview_emails():
     all_users = usr.get_all_users().json['users']

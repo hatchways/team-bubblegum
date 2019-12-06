@@ -3,11 +3,11 @@ from config import SENDGRID_API_KEY
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 from models import db, User
-import receipt_controller as rc
-import category_controller as cc
+import api.receipt_controller as rc
+import api.category_controller as cc
 import datetime as dt
 
-emails = Blueprint('emails', __name__, url_prefix='emails')
+emails = Blueprint('emails', __name__, url_prefix='/emails')
 
 
 @emails.route('/monthly-overview/<int:user_id>', methods=['GET'])

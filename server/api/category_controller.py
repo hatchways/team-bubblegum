@@ -2,7 +2,7 @@ from flask import Blueprint, jsonify, request
 from models import db, Receipt
 import datetime as dt
 import calendar
-import users as usr
+import api.users as usr
 
 category_controller = Blueprint('category_controller',
                                 __name__, url_prefix='/categories')

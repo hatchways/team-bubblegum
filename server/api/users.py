@@ -54,7 +54,7 @@ def decode_auth_token(auth_header):
 
     try:
         payload = jwt.decode(auth_token, SECRET_KEY)
-        user_entry = User.query.get_or_404(payload['email'])
+        user_entry = User.query.filter(User.email == payload['email']).first_or_404()
         user_id = user_entry.id
         return user_id
     except jwt.ExpiredSignatureError:
