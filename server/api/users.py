@@ -43,6 +43,21 @@ def login():
             return jsonify({'err': 'Invalid credentials'})
     return jsonify({'err': 'Invalid credentials'})
 
+
 def get_all_users():
     all_users = User.query.all()
     return jsonify(users=[user.to_dict() for user in all_users])
+
+
+def decode_auth_token(auth_header):
+    auth_token = auth_header.split(" ")[1]
+
+    try:
+        payload = jwt.decode(auth_token, SECRET_KEY)
+        user_entry = User.query.get_or_404(payload['email'])
+        user_id = user_entry.id
+        return user_id
+    except jwt.ExpiredSignatureError:
+        return jsonify({"Error": "Signature expired. Please log in again."})
+    except jwt.InvalidTokenError:
+        return jsonify({"Error": "Invalid token. Please log in again."})

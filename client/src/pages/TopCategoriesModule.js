@@ -24,7 +24,14 @@ class TopCategoriesModule extends Component {
   }
 
   componentDidMount() {
-    fetch("/categories/" + this.props.year + "/" + this.props.month)
+    fetch("/categories/" + this.props.year + "/" + this.props.month,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    })
     .then(response => {
       return response.json();
     })
@@ -37,7 +44,14 @@ class TopCategoriesModule extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.year !== prevProps.year || this.props.month !== prevProps.month) {
-      fetch("/categories/" + this.props.year + "/" + this.props.month)
+      fetch("/categories/" + this.props.year + "/" + this.props.month,
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+      })
       .then(response => {
         return response.json();
       })

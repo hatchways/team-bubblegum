@@ -6,6 +6,8 @@ import calendar
 from config import S3_LOCATION, S3_BUCKET_NAME
 from werkzeug import secure_filename
 from app import s3
+import users as usr
+import requests
 
 receipt_controller = Blueprint('receipt_controller',
                                __name__, url_prefix='/receipts')
@@ -13,6 +15,14 @@ receipt_controller = Blueprint('receipt_controller',
 
 @receipt_controller.route('/', methods=['POST'])
 def create():
+    auth_header = request.headers.get('Authorization')
+    if auth_header:
+        user_id = usr.decode_auth_token(auth_header)
+        if not isinstance(user_id, int):
+            return jsonify({"Error": "Failed to authenticate"})
+    else:
+        return jsonify({"Error": "Failed to authenticate"})
+
     receipt_data = request.json
 
     amount = receipt_data['amount']
@@ -20,7 +30,7 @@ def create():
     category = receipt_data['category']
     receipt_date = receipt_data['receipt_date']
 
-    receipt = Receipt(amount=amount, title=title, receipt_date=receipt_date, category=category)
+    receipt = Receipt(amount=amount, title=title, receipt_date=receipt_date, category=category, user_id=user_id)
     db.session.add(receipt)
 
     failed = False
@@ -28,7 +38,7 @@ def create():
         db.session.commit()
         # AFTER SUCCESSFUL RECEIPT CREATION, ADD IMAGES
         for image in receipt_data['pic_urls']:
-            new_image = Image(location=image, receipt=receipt)
+            new_image = Image(location=image, receipt=receipt, user_id=user_id)
             db.session.add(new_image)
             try:
                 db.session.commit()
@@ -52,6 +62,15 @@ def create():
 @receipt_controller.route('/<int:year>/<int:month>/<int:date>', methods=['GET'])
 def get_all_receipts(year=None, month=None, date=None, weekly=False,
                      start_date=None, end_date=None):
+    auth_header = request.headers.get('Authorization')
+    if auth_header:
+        user_id = usr.decode_auth_token(auth_header)
+        if not isinstance(user_id, int):
+            return jsonify({"Error": "Failed to authenticate"})
+    else:
+        return jsonify({"Error": "Failed to authenticate"})
+
+    # get query param for weekly if there is one
     if request.args.get('weekly') is not None:
         weekly = int(request.args.get('weekly'))
     total_amount = 0
@@ -87,6 +106,7 @@ def get_all_receipts(year=None, month=None, date=None, weekly=False,
             end_date = dt.date(year, month, date)
 
     receipts = (Receipt.query
+                .filter(Receipt.user_id == user_id)
                 .filter(Receipt.receipt_date <= end_date)
                 .filter(Receipt.receipt_date >= start_date)
                 .order_by(Receipt.receipt_date.desc()))
@@ -100,10 +120,20 @@ def get_all_receipts(year=None, month=None, date=None, weekly=False,
 
 @receipt_controller.route('/daily-expenses/<int:year>/<int:month>', methods=['GET'])
 def get_daily_expenses_of_month(year, month):
+    auth_header = request.headers.get('Authorization')
+    if auth_header:
+        user_id = usr.decode_auth_token(auth_header)
+        if not isinstance(user_id, int):
+            return jsonify({"Error": "Failed to authenticate"})
+    else:
+        return jsonify({"Error": "Failed to authenticate"})
+
     end = calendar.monthrange(year, month)[1]
     daily_expenses = []
+    url = request.url_root  # url = http://localhost:3000/receipts
     for date in range(1, end + 1):
-        daily_total = get_all_receipts(year, month, date)
+        daily_total = requests.get(url + year + "/" + month + "/" + date,
+                                   headers={"Authorization": auth_header})
         daily_expenses.append({'date': {'year': year, 'month': month - 1, 'date': date},
                                'expense': float(daily_total.json['total_amount'])})
     return jsonify(data=daily_expenses)
@@ -111,13 +141,35 @@ def get_daily_expenses_of_month(year, month):
 
 @receipt_controller.route('/<int:id>', methods=['GET'])
 def get_receipt(id):
-    receipt = Receipt.query.get_or_404(id)
+    auth_header = request.headers.get('Authorization')
+    if auth_header:
+        user_id = usr.decode_auth_token(auth_header)
+        if not isinstance(user_id, int):
+            return jsonify({"Error": "Failed to authenticate"})
+    else:
+        return jsonify({"Error": "Failed to authenticate"})
+
+    receipt = (Receipt.query
+               .filter(Receipt.user_id == user_id)
+               .get_or_404(id))
+
     return jsonify(receipt.to_dict())
 
 
 @receipt_controller.route('/<int:id>', methods=['PATCH', 'PUT'])
 def update_receipt(id):
-    receipt = Receipt.query.get_or_404(id)
+    auth_header = request.headers.get('Authorization')
+    if auth_header:
+        user_id = usr.decode_auth_token(auth_header)
+        if not isinstance(user_id, int):
+            return jsonify({"Error": "Failed to authenticate"})
+    else:
+        return jsonify({"Error": "Failed to authenticate"})
+
+    receipt = (Receipt.query
+               .filter(Receipt.user_id == user_id)
+               .get_or_404(id))
+
     receipt_data = request.json
 
     receipt.amount = receipt_data['amount']
@@ -139,6 +191,7 @@ def update_receipt(id):
     if failed:
         return jsonify({"Error": "Failed to update receipt"})
     return jsonify({"Success": "Receipt updated"})
+
 
 @receipt_controller.route('/images', methods=["POST"])
 def upload_images():
