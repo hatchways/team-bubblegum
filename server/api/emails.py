@@ -3,7 +3,7 @@ from config import SENDGRID_API_KEY
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-emails = Blueprint('emails', __name__, url_prefix='emails')
+emails = Blueprint('emails', __name__, url_prefix='/emails')
 
 
 @emails.route('/monthly-overview/<int:user_id>', methods=['GET'])
