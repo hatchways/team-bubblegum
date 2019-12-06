@@ -21,7 +21,8 @@ const useStyles = makeStyles(theme => ({
     backgroundRepeat: 'no-repeat',
     backgroundColor: theme.palette.grey[50],
     backgroundSize: 'cover',
-    backgroundPosition: 'center'
+    backgroundPosition: 'center',
+    position: 'relative'
   },
   overlay: {
     height: '100vh',
@@ -29,14 +30,13 @@ const useStyles = makeStyles(theme => ({
     opacity: '.28',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative'
+    alignItems: 'center'
   },
   logoOverlay: {
     position: 'absolute'
   },
   logoArea: {
-    width: '300px',
+    width: '100%',
     height: '200px',
     fontSize: '1.5rem',
     fontWeight: 700,
