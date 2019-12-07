@@ -1,15 +1,22 @@
 import React, { useContext } from "react";
 import { Route, Redirect } from "react-router-dom";
-import { UserContext } from "./context/UserContext";
+import jwt_decode from "jwt-decode";
 
 const PrivateRoute = ({ component: Component, ...rest }) => {
-  const { id } = useContext(UserContext);
-
+  const checkToken = () => {
+    let user;
+    try {
+      user = jwt_decode(localStorage.getItem("token"));
+    } catch {
+      user = null;
+    }
+    return user;
+  };
   return (
     <Route
       {...rest}
       render={props =>
-        id ? <Component {...props} /> : <Redirect to='/login' />
+        checkToken() ? <Component {...props} /> : <Redirect to='/login' />
       }
     />
   );

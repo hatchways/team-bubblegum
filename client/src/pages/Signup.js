@@ -4,7 +4,6 @@ import { makeStyles } from '@material-ui/core/styles';
 import bgImage from '../assets/images/4c49d03df598d6822be307208f2333b1e9b42279.png';
 import logo from '../assets/images/logo.png';
 import CustomizedSnackbars from '../components/Snackbar';
-import { UserContext } from '../context/UserContext';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -80,7 +79,6 @@ const SignupPage = () => {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [err, setErr] = useState('');
-  const { user, setUser } = useContext(UserContext)
 
   const createUser = e => {
     e.preventDefault();
@@ -100,7 +98,6 @@ const SignupPage = () => {
       })
       .then(res => {
         localStorage.setItem('token', res.token);
-        setUser({id: res.user_id})
         if (res.err) {
           setErr(res.err);
         }
