@@ -3,10 +3,10 @@ import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
 import TableCell from "@material-ui/core/TableCell";
-import TableHead from "@material-ui/core/TableHead";
 import TableRow from "@material-ui/core/TableRow";
 import Paper from "@material-ui/core/Paper";
 import { Toolbar, Typography, Box } from "@material-ui/core";
+import { formatDate } from "../utils/dateFunctions";
 
 const useStyles = makeStyles({
   root: {
@@ -71,12 +71,13 @@ export default function ReportsTable({ receiptData: { posts, total_amount } }) {
           {posts &&
             posts.map(data => (
               <TableRow key={data.id}>
+                <TableCell></TableCell>
                 <TableCell>{data.title}</TableCell>
-                <TableCell align='center'>{data.amount}</TableCell>
+                <TableCell align='center'>- ${data.amount}</TableCell>
                 <TableCell align='center'>
-                  {new Date(data.receipt_date).toLocaleDateString()}
+                  {formatDate(data.receipt_date)}
                 </TableCell>
-                <TableCell align='center'>{data.cateogory}</TableCell>
+                <TableCell align='center'>{data.category}</TableCell>
               </TableRow>
             ))}
         </TableBody>
