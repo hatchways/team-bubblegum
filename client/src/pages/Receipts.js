@@ -120,7 +120,7 @@ const Receipts = props => {
       <Grid container direction='row' spacing={3}>
         {receiptData.posts &&
           receiptData.posts.map(receipt => (
-            <Grid item md={3}>
+            <Grid item md={3} key={receipt.id}>
               <Card elevation={0} style={{ backgroundColor: "transparent" }}>
                 <CardActionArea>
                   <CardMedia
