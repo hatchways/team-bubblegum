@@ -3,7 +3,7 @@ from config import SENDGRID_API_KEY
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail
 
-emails = Blueprint('emails', __name__, url_prefix='emails')
+emails = Blueprint('emails', __name__, url_prefix='/emails')
 
 
 @emails.route('/monthly-overview/<int:user_id>', methods=['GET'])
@@ -18,7 +18,6 @@ def end_of_month_overview():
         sg.send(message)
     except Exception as e:
         return jsonify({"Error": "Failed to send email"})
-
 
 @emails.route('/reset-password', methods=['PUT'])
 def reset_password():
