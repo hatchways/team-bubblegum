@@ -9,6 +9,8 @@ import AccountCircleIcon from '@material-ui/icons/AccountCircle';
 import { Link } from 'react-router-dom';
 import CreateReceipt from './CreateReceipt';
 import UploadReceipt from './UploadReceipt';
+import {IconButton } from '@material-ui/core'
+import MenuIcon from '@material-ui/icons/Menu';
 
 function getModalStyle() {
   return {
@@ -18,14 +20,19 @@ function getModalStyle() {
   };
 }
 
+const drawerWidth = 240;
+
 const useStyles = makeStyles(theme => ({
   root: {
-    flexGrow: 0,
   },
   appBar: {
     zIndex: theme.zIndex.drawer + 1,
     background: "white",
-    padding: 10
+    padding: 10,
+    [theme.breakpoints.up('sm')]: {
+      width: `calc(100% - ${drawerWidth}px)`,
+      marginLeft: drawerWidth,
+    }
   },
   title: {
     flexGrow: 1
@@ -42,10 +49,16 @@ const useStyles = makeStyles(theme => ({
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
     padding: theme.spacing(2, 4, 3)
-  }
+  },
+  menuButton: {
+    marginRight: theme.spacing(2),
+    [theme.breakpoints.up('sm')]: {
+      display: 'none',
+    },
+  },
 }));
 
-function TopBar() {
+function TopBar({ handleDrawerToggle }) {
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
   const [page, setPage] = useState("upload");
@@ -69,8 +82,15 @@ function TopBar() {
 
   return (
     <div className={classes.root}>
-      <AppBar position="static" className={classes.appBar}>
+      <AppBar position="fixed" className={classes.appBar}>
         <Toolbar>
+        <IconButton
+            edge="start"
+            onClick={handleDrawerToggle}
+            className={classes.menuButton}
+          >
+            <MenuIcon />
+          </IconButton>
           <Typography className={classes.title}></Typography>
           <Button variant="outlined" className={classes.upload} onClick={handleOpen}>Upload Receipt</Button>
           <Button><AccountCircleIcon />Profile</Button>
