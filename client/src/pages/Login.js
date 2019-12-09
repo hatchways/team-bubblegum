@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { Redirect } from 'react-router-dom';
 import bgImage from '../assets/images/4c49d03df598d6822be307208f2333b1e9b42279.png';
 import logo from '../assets/images/logo.png';
 
@@ -74,7 +75,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const LoginPage = () => {
+const LoginPage = (props) => {
   const classes = useStyles();
 
   const [email, setEmail] = useState('');
@@ -100,6 +101,8 @@ const LoginPage = () => {
       .then(res => {
         console.log(res);
         localStorage.setItem('token', res.token);
+        localStorage.setItem('authorized', JSON.stringify(true));
+        props.setIsAuthed(true);
         if (res.err) {
           setErr(res.err);
         }
@@ -108,6 +111,10 @@ const LoginPage = () => {
         console.log(err.message);
       });
   };
+
+  if (props.isAuthed) {
+    return <Redirect to='/home' />
+  }
 
   return (
     <Grid container className={classes.root}>
