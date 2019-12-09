@@ -13,3 +13,5 @@ S3_BUCKET_NAME = os.environ.get('S3_BUCKET_NAME')
 S3_LOCATION = 'http://{}.s3.amazonaws.com/'.format(S3_BUCKET_NAME)
 
 SENDGRID_API_KEY = os.environ.get('SENDGRID_API_KEY')
+TEST_EMAIL1 = os.environ.get('TEST_EMAIL1')
+TEST_EMAIL2 = os.environ.get('TEST_EMAIL2')
