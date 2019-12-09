@@ -9,14 +9,15 @@ category_controller = Blueprint('category_controller',
 
 
 @category_controller.route('/<int:year>/<int:month>', methods=['GET'])
-def get_category_expenses(year, month):
-    auth_header = request.headers.get('Authorization')
-    if auth_header:
-        user_id = usr.decode_auth_token(auth_header)
-        if not isinstance(user_id, int):
+def get_category_expenses(year, month, is_email=False, user_id=None):
+    if not is_email:
+        auth_header = request.headers.get('Authorization')
+        if auth_header:
+            user_id = usr.decode_auth_token(auth_header)
+            if not isinstance(user_id, int):
+                return jsonify({"Error": "Failed to authenticate"})
+        else:
             return jsonify({"Error": "Failed to authenticate"})
-    else:
-        return jsonify({"Error": "Failed to authenticate"})
 
     num_days = calendar.monthrange(year, month)[1]
     start_date = dt.date(year, month, 1)
@@ -28,8 +29,10 @@ def get_category_expenses(year, month):
                 .filter(Receipt.receipt_date >= start_date)
                 .with_entities(Receipt.category, db.func.sum(Receipt.amount).label("expense"))
                 .group_by(Receipt.category)
-                .order_by(db.func.sum(Receipt.amount).desc())
-                .limit(3))
+                .order_by(db.func.sum(Receipt.amount).desc()))
+
+    if not is_email:
+        receipts = receipts.limit(3)
 
     return jsonify(categories=[{"category": receipt.category,
                                 "expense": float(receipt.expense)}

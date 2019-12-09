@@ -73,7 +73,6 @@ def get_all_receipts(year=None, month=None, date=None, weekly=False,
     # get query param for weekly if there is one
     if request.args.get('weekly') is not None:
         weekly = int(request.args.get('weekly'))
-    total_amount = 0
 
     # if user provides start and end dates
     if request.args.get('start_date') is not None and request.args.get('end_date') is not None:
@@ -105,14 +104,8 @@ def get_all_receipts(year=None, month=None, date=None, weekly=False,
             start_date = dt.date(year, month, date)
             end_date = dt.date(year, month, date)
 
-    receipts = (Receipt.query
-                .filter(Receipt.user_id == user_id)
-                .filter(Receipt.receipt_date <= end_date)
-                .filter(Receipt.receipt_date >= start_date)
-                .order_by(Receipt.receipt_date.desc()))
-
-    for receipt in receipts:
-        total_amount += receipt.amount
+    receipts = get_receipts_from_database(user_id, start_date, end_date)
+    total_amount = get_receipts_total_expense(receipts)
 
     return jsonify(total_amount=str(total_amount),
                    posts=[receipt.to_dict() for receipt in receipts])
@@ -130,13 +123,13 @@ def get_daily_expenses_of_month(year, month):
 
     end = calendar.monthrange(year, month)[1]
     daily_expenses = []
-    url = request.url_root + "receipts/"  # url = http://localhost:3000/receipts
     for date in range(1, end + 1):
-        response = requests.get(url + str(year) + "/" + str(month) + "/" + str(date),
-                                headers={"Authorization": auth_header})
-        daily_total = response.json()
+        start_date = dt.date(year, month, date)
+        end_date = dt.date(year, month, date)
+        receipts = get_receipts_from_database(user_id, start_date, end_date)
+        daily_total = get_receipts_total_expense(receipts)
         daily_expenses.append({'date': {'year': year, 'month': month - 1, 'date': date},
-                               'expense': float(daily_total['total_amount'])})
+                               'expense': float(daily_total)})
     return jsonify(data=daily_expenses)
 
 
@@ -213,3 +206,21 @@ def upload_images():
         except Exception as e:
             print(e)
             return jsonify({'did not': 'work'})
+
+
+def get_receipts_from_database(user_id, start_date, end_date):
+    receipts = (Receipt.query
+                .filter(Receipt.user_id == user_id)
+                .filter(Receipt.receipt_date <= end_date)
+                .filter(Receipt.receipt_date >= start_date)
+                .order_by(Receipt.receipt_date.desc()))
+
+    return receipts
+
+
+def get_receipts_total_expense(receipts):
+    total_amount = 0
+    for receipt in receipts:
+        total_amount += receipt.amount
+
+    return total_amount
