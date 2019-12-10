@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, send_file
-from models import db, Receipt, Image
+from models import *
 import datetime as dt
 from datetime import datetime
 import calendar
@@ -7,6 +7,7 @@ from config import S3_LOCATION, S3_BUCKET_NAME
 from werkzeug import secure_filename
 from app import s3
 import csv
+from sqlalchemy import extract
 
 receipt_controller = Blueprint('receipt_controller',
                                __name__, url_prefix='/receipts')
@@ -56,7 +57,7 @@ def get_all_receipts(year=None, month=None, date=None, weekly=False,
     if request.args.get('weekly') is not None:
         weekly = int(request.args.get('weekly'))
     total_amount = 0
-    
+
     # if user provides start and end dates
     if request.args.get('start_date') is not None and request.args.get('end_date') is not None:
         start_date = datetime.strptime(
@@ -151,7 +152,7 @@ def upload_images():
                 filename = secure_filename(image.filename)
                 image.save(filename)
                 s3.upload_file(
-                    Bucket = S3_BUCKET_NAME,
+                    Bucket=S3_BUCKET_NAME,
                     Filename=filename,
                     Key=filename
                 )
@@ -161,21 +162,16 @@ def upload_images():
             print(e)
             return jsonify({'Error': 'Failed to upload image(s)'})
 
-@receipt_controller.route('/download')
-def download_csv():
+@receipt_controller.route('/download/<int:month>')
+def download_csv(month):
+    user_receipts = Receipt.query.filter_by(user_id=1).filter(extract('year', Receipt.receipt_date) == datetime.now().year).filter(extract('month', Receipt.receipt_date) == month).all()
     try:
         headers = ['title', 'amount', 'category', 'receipt_date']
-        rows = [
-            ['starbucks', 4.25, 'Food', '2019-11-07'],
-            ['disneyland', 145, 'Travel', '2019-11-09'],
-            ['ramen', 9.63, 'Food', '2019-12-11'],
-            ['macys', 87.24, 'Merchandise', '2019-11-01'],
-            ['itea', 4.75, 'Food', '2019-11-04']
-        ]
         with open('python-csv.csv', 'w') as csvfile:
             writer = csv.writer(csvfile)
             writer.writerow(headers)
-            for row in rows:
+            for receipt in user_receipts:
+                row = [receipt.title, receipt.amount, receipt.category, receipt.receipt_date]
                 writer.writerow(row)
         return send_file('python-csv.csv', attachment_filename='python-csv.csv', as_attachment=True)
     except Exception as e:
