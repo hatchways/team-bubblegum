@@ -17,7 +17,7 @@ def generate_file():
         users = User.query.all()
         day_before = datetime.now() - timedelta(days=1)
         for user in users:
-            user_receipts = Receipt.query.filter_by(user_id == user.id).filter(extract('year', Receipt.purchase_date) == day_before.year).filter(extract('month', Receipt.purchase_date) == day_before.month).all()
+            user_receipts = Receipt.query.filter_by(user_id=user.id).filter(extract('year', Receipt.purchase_date) == day_before.year).filter(extract('month', Receipt.purchase_date) == day_before.month).all()
             with open('monthly-report.csv', 'w') as csvfile:
                 writer = csv.writer(csvfile)
                 for receipt in user_receipts:
