@@ -4,12 +4,15 @@ from app import bcrypt
 
 db = SQLAlchemy()
 
+
 class User(db.Model):
     __tablename__ = 'user'
 
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    receipts = db.relationship('Receipt', backref='user')
+    images = db.relationship('Image', backref='user')
 
     def __init__(self, email, password):
         self.email = email
@@ -36,12 +39,13 @@ class Receipt(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
     images = db.relationship('Image', backref='receipt')
 
-    def __init__(self, amount, title, receipt_date, category=None):
+    def __init__(self, amount, title, receipt_date, user_id, category=None):
         self.amount = amount
         self.title = title
         self.category = category
         self.receipt_date = receipt_date
         self.date_created = date.today()
+        self.user_id = user_id
 
     def __repr__(self):
         # return f"Receipt {self.id}, Title: {self.title}" < having syntax error

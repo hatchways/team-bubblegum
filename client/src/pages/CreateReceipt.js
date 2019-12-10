@@ -30,7 +30,10 @@ class CreateReceipt extends Component {
     console.log(this.state);
     fetch("/receipts/", {
       method: "POST",
-      headers: { "Content-Type": "application/json" },
+      headers: { 
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      },
       body: JSON.stringify(this.state)
     })
       .then(res => {
