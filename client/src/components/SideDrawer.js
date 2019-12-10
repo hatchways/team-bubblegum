@@ -72,8 +72,7 @@ const SideDrawer = () => {
   const classes = useStyles();
 
   const logout = () => {
-    localStorage.removeItem("token");
-    localStorage.removeItem("authorized");
+    localStorage.clear();
     document.location.reload();
   };
 
