@@ -1,10 +1,9 @@
-import React, { useState, useContext } from 'react';
+import React, { useState } from 'react';
 import { TextField, Button, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
 import bgImage from '../assets/images/4c49d03df598d6822be307208f2333b1e9b42279.png';
 import logo from '../assets/images/logo.png';
 import CustomizedSnackbars from '../components/Snackbar';
-import { UserContext } from '../context/UserContext';
 
 const useStyles = makeStyles(theme => ({
   root: {
@@ -74,13 +73,12 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SignupPage = () => {
+const SignupPage = (props) => {
   const classes = useStyles();
 
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [err, setErr] = useState('');
-  const { user, setUser } = useContext(UserContext)
 
   const createUser = e => {
     e.preventDefault();
@@ -100,7 +98,8 @@ const SignupPage = () => {
       })
       .then(res => {
         localStorage.setItem('token', res.token);
-        setUser({id: res.user_id})
+        localStorage.setItem('authorized', JSON.stringify(true));
+        props.setIsAuthed(true);
         if (res.err) {
           setErr(res.err);
         }
