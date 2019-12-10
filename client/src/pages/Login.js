@@ -127,7 +127,7 @@ const LoginPage = (props) => {
           <div style={{ textAlign: 'center' }}>RECEIPT TRACKER</div>
         </div>
       </Grid>
-      <Grid container direction='column' xs={12} sm={8} md={7}>
+      <Grid container item direction='column' xs={12} sm={8} md={7}>
         <div className={classes.paper}>
           <Grid container justify='flex-end' alignItems='center'>
             <p style={{ margin: '1rem' }}>Don't have an account?</p>
