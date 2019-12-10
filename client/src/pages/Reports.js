@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Typography, Divider, Paper, Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import ReceiptsSelect from '../components/ReceiptsSelect';
+import MonthSelect from '../components/MonthSelect';
 import ReportsTable from '../components/ReportsTable';
 
 const useStyles = theme => ({
@@ -61,7 +61,7 @@ const Reports = props => {
           <Typography variant='h4'>Reports</Typography>
         </Grid>
         <Grid item>
-          <ReceiptsSelect
+          <MonthSelect
             month={month}
             months={months}
             handleMonthChange={handleMonthChange}

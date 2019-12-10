@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Modal from '@material-ui/core/Modal';
 import Backdrop from '@material-ui/core/Backdrop';
 import Fade from '@material-ui/core/Fade';
-
+import {formatDate} from '../utils/dateFunctions'
 const useStyles = makeStyles(theme => ({
   modal: {
     display: 'flex',
@@ -37,8 +37,8 @@ export default function ReceiptsModal({ handleClose, open, data }) {
       >
         <Fade in={open}>
           <div className={classes.paper}>
-            <h2 id='transition-modal-title'>{data.title}</h2>
-            <p id='transition-modal-description'>{data.receipt_date}</p>
+            <h2 id='transition-modal-title'>{data.title} ${data.amount}</h2>
+            <p id='transition-modal-description'>{formatDate(data.receipt_date)}</p>
           </div>
         </Fade>
       </Modal>

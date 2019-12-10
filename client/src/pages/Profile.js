@@ -7,7 +7,6 @@ import {
   Box
 } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
-import ReceiptsSelect from "../components/ReceiptsSelect";
 import ReportsTable from "../components/ReportsTable";
 
 const useStyles = theme => ({
