@@ -1,6 +1,9 @@
-import React, { Component } from 'react';
-import { Typography, Divider, Button } from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
+import React, { useState, useEffect } from "react";
+import { Typography, Divider, Paper, Grid, Button } from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import MonthSelect from "../components/MonthSelect";
+import ReportsTable from "../components/ReportsTable";
+import YearSelect from "../components/YearSelect";
 
 const useStyles = theme => ({
   root: {
@@ -8,14 +11,67 @@ const useStyles = theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(0, 40),
+    padding: theme.spacing(0, 40)
   },
   toolbar: theme.mixins.toolbar
 });
 
-class Reports extends Component {
-  onBtnClick = () => {
-    fetch("/receipts/download")
+const Reports = props => {
+  const [receiptData, setReceiptData] = useState([]);
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
+  const months = [
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
+  ];
+  const years = ["All", "2020", "2019", "2018"];
+
+  useEffect(() => {
+    const fetchReport = async () => {
+      const response = await fetch("/receipts/");
+      const jsonResponse = await response.json();
+
+      await setReceiptData(jsonResponse);
+    };
+
+    fetchReport();
+  }, []);
+
+  const { classes } = props;
+
+  const handleMonthChange = async month => {
+    setMonth(month.toString());
+    const response = await fetch(`/receipts/${year}/${month}`);
+    const jsonResponse = await response.json();
+
+    await setReceiptData(jsonResponse);
+  };
+  const handleYearChange = async year => {
+    if (year === "All") {
+      setYear("");
+      setMonth("");
+      const response = await fetch(`/receipts/`);
+      const jsonResponse = await response.json();
+      await setReceiptData(jsonResponse);
+    } else {
+      setYear(year);
+      const response = await fetch(`/receipts/${year}`);
+      const jsonResponse = await response.json();
+      await setReceiptData(jsonResponse);
+    }
+  };
+  const onBtnClick = () => {
+    fetch(`/receipts/download/${year}/${month}`)
       .then(res => {
         console.log(res);
         res.blob().then(blob => {
@@ -29,19 +85,37 @@ class Reports extends Component {
       .catch(err => {
         console.log(err);
       })
-  };
 
-  render() {
-    const { classes } = this.props;
-    return (
-      <div className={classes.root}>
-          <Typography variant="h4">Reports</Typography>
-          <Divider />
-          <Typography paragraph>SOME COOL STUFF HERE</Typography>
-          <Button variant="contained" color="primary" onClick={this.onBtnClick}>DOWNLOAD</Button>
-      </div>
-    );
-  }
-}
+  return (
+    <div className={classes.root}>
+      <Grid container alignItems='center' spacing={(10, 0)}>
+        <Grid item sm>
+          <Typography variant='h4'>Reports</Typography>
+          <Button variant="contained" color="primary" onClick={onBtnClick}>DOWNLOAD</Button>
+        </Grid>
+        <Grid item>
+          <YearSelect
+            selectedOption={year}
+            optionsArray={years}
+            handleOptionChange={handleYearChange}
+          />
+        </Grid>
+        <Grid item>
+          <MonthSelect
+            selectedOption={month}
+            optionsArray={months}
+            handleOptionChange={handleMonthChange}
+            isDisabled={year ? false : true}
+          />
+        </Grid>
+      </Grid>
+      <Grid container>
+        <Grid container item xs={12}>
+          <ReportsTable receiptData={receiptData} />
+        </Grid>
+      </Grid>
+    </div>
+  );
+};
 
 export default withStyles(useStyles)(Reports);

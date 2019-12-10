@@ -17,6 +17,7 @@ boto3 = "*"
 celery = "*"
 sendgrid = "*"
 certifi = "*"
+requests = "*"
 
 [requires]
 python_version = "3.7"

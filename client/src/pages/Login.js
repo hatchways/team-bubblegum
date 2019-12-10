@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { Redirect } from 'react-router-dom';
 import bgImage from '../assets/images/4c49d03df598d6822be307208f2333b1e9b42279.png';
 import logo from '../assets/images/logo.png';
 
@@ -21,7 +22,8 @@ const useStyles = makeStyles(theme => ({
     backgroundRepeat: 'no-repeat',
     backgroundColor: theme.palette.grey[50],
     backgroundSize: 'cover',
-    backgroundPosition: 'center'
+    backgroundPosition: 'center',
+    position: 'relative'
   },
   overlay: {
     height: '100vh',
@@ -29,14 +31,13 @@ const useStyles = makeStyles(theme => ({
     opacity: '.28',
     display: 'flex',
     justifyContent: 'center',
-    alignItems: 'center',
-    position: 'relative'
+    alignItems: 'center'
   },
   logoOverlay: {
     position: 'absolute'
   },
   logoArea: {
-    width: '300px',
+    width: '100%',
     height: '200px',
     fontSize: '1.5rem',
     fontWeight: 700,
@@ -74,7 +75,7 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const LoginPage = () => {
+const LoginPage = (props) => {
   const classes = useStyles();
 
   const [email, setEmail] = useState('');
@@ -100,6 +101,8 @@ const LoginPage = () => {
       .then(res => {
         console.log(res);
         localStorage.setItem('token', res.token);
+        localStorage.setItem('authorized', JSON.stringify(true));
+        props.setIsAuthed(true);
         if (res.err) {
           setErr(res.err);
         }
@@ -108,6 +111,10 @@ const LoginPage = () => {
         console.log(err.message);
       });
   };
+
+  if (props.isAuthed) {
+    return <Redirect to='/home' />
+  }
 
   return (
     <Grid container className={classes.root}>
@@ -120,7 +127,7 @@ const LoginPage = () => {
           <div style={{ textAlign: 'center' }}>RECEIPT TRACKER</div>
         </div>
       </Grid>
-      <Grid container direction='column' xs={12} sm={8} md={7}>
+      <Grid container item direction='column' xs={12} sm={8} md={7}>
         <div className={classes.paper}>
           <Grid container justify='flex-end' alignItems='center'>
             <p style={{ margin: '1rem' }}>Don't have an account?</p>
