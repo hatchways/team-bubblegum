@@ -91,7 +91,6 @@ def end_of_month_overview(user_id):
         return jsonify({"Error": "Failed to send monthly overview"})
     return jsonify({"Success": "Monthly overview email sent"})
 
-
 @emails.route('/reset-password', methods=['PUT'])
 def reset_password():
     message = Mail(
