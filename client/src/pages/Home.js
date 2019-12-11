@@ -5,7 +5,7 @@ import SideBar from "./SideBar";
 import Dashboard from "./Dashboard";
 import Reports from "./Reports";
 import Receipts from "./Receipts";
-import Profile from "./Profile";
+import Budget from "./Budget";
 import CreateReceipt from "./CreateReceipt";
 import UploadReceipt from "./UploadReceipt";
 import { makeStyles } from "@material-ui/core/styles";
@@ -80,7 +80,7 @@ function Home() {
         <Route path='/home/reports' component={Reports} />
         <Route path='/home/receipts' component={Receipts} />
         <Route path='/home/upload' component={UploadReceipt} />
-        <Route path='/home/profile' component={Profile} />
+        <Route path='/home/budget' component={Budget} />
       </main>
     </div>
   );
