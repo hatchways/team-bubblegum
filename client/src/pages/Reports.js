@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Divider, Paper, Grid } from "@material-ui/core";
+import { Typography, Divider, Paper, Grid, Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import MonthSelect from "../components/MonthSelect";
 import ReportsTable from "../components/ReportsTable";
@@ -70,12 +70,28 @@ const Reports = props => {
       await setReceiptData(jsonResponse);
     }
   };
+  const onBtnClick = () => {
+    fetch(`/receipts/download/${year}/${month}`)
+      .then(res => {
+        console.log(res);
+        res.blob().then(blob => {
+          let url = URL.createObjectURL(blob);
+          let a = document.createElement('a');
+          a.href = url;
+          a.download = 'python-csv.csv';
+          a.click();
+        })
+      })
+      .catch(err => {
+        console.log(err);
+      })
 
   return (
     <div className={classes.root}>
       <Grid container alignItems='center' spacing={(10, 0)}>
         <Grid item sm>
           <Typography variant='h4'>Reports</Typography>
+          <Button variant="contained" color="primary" onClick={onBtnClick}>DOWNLOAD</Button>
         </Grid>
         <Grid item>
           <YearSelect
