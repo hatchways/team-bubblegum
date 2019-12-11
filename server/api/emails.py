@@ -89,7 +89,7 @@ def end_of_month_overview(user_id):
         sg.send(message)
     except Exception as e:
         return jsonify({"Error": "Failed to send monthly overview"})
-    return jsonify({"Success": "Email sent"})
+    return jsonify({"Success": "Monthly overview email sent"})
 
 @emails.route('/reset-password', methods=['PUT'])
 def reset_password():
@@ -103,4 +103,18 @@ def reset_password():
         sg.send(message)
     except Exception as e:
         return jsonify({"Error": "Failed to send reset password email"})
-    return jsonify({"Success": "Email sent"})
+    return jsonify({"Success": "Reset password email sent"})
+
+
+def welcome_email(user_email):
+    message = Mail(
+        from_email=TEST_EMAIL1,
+        to_emails=user_email,
+        subject='Welcome to Receipt Tracker')
+    message.template_id = TemplateId("d-e41c2451bbcb4d3781cde06c0e915fd8")
+    try:
+        sg = SendGridAPIClient(SENDGRID_API_KEY)
+        sg.send(message)
+    except Exception as e:
+        return jsonify({"Error": "Failed to send welcome email"})
+    return jsonify({"Success": "Welcome email sent"})
