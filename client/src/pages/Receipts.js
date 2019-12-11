@@ -1,21 +1,17 @@
-import React, { Component, useState, useEffect } from 'react';
+import React, { useState, useEffect } from "react";
 import {
   Typography,
-  Divider,
-  Paper,
   Grid,
   Card,
   CardMedia,
   CardActionArea,
-  CardContent,
-  FormControl,
-  MenuItem,
-  Select
-} from '@material-ui/core';
-import { withStyles } from '@material-ui/core/styles';
-import ReceiptsModal from '../components/ReceiptsModal';
-import ReceiptsSelect from '../components/ReceiptsSelect';
-
+  CardContent
+} from "@material-ui/core";
+import { withStyles } from "@material-ui/core/styles";
+import ReceiptsModal from "../components/ReceiptsModal";
+import MonthSelect from "../components/MonthSelect";
+import YearSelect from "../components/YearSelect";
+import { formatDate } from "../utils/dateFunctions";
 const useStyles = theme => ({
   root: {
     flexGrow: 1
@@ -25,7 +21,7 @@ const useStyles = theme => ({
     padding: theme.spacing(0, 40)
   },
   textCenter: {
-    textAlign: 'center'
+    textAlign: "center"
   },
   toolbar: theme.mixins.toolbar
 });
@@ -35,26 +31,30 @@ const Receipts = props => {
   const [receiptData, setReceiptData] = useState([]);
   const [open, setOpen] = useState(false);
   const [modalData, setModalData] = useState({});
-  const [month, setMonth] = useState('All')
+  const [month, setMonth] = useState("");
+  const [year, setYear] = useState("");
   const months = [
-    'January',
-    'February',
-    'March',
-    'April',
-    'May',
-    'June',
-    'July',
-    'August',
-    'September',
-    'October',
-    'November',
-    'December'
+    "January",
+    "February",
+    "March",
+    "April",
+    "May",
+    "June",
+    "July",
+    "August",
+    "September",
+    "October",
+    "November",
+    "December"
   ];
+  const years = ["All", "2020", "2019", "2018"];
 
   useEffect(() => {
     const fetchReceipts = async () => {
-      const response = await fetch('/receipts/');
+      const response = await fetch(`/receipts/`);
+      console.log("what is res", response);
       const jsonResponse = await response.json();
+      console.log("what is json", jsonResponse);
 
       await setReceiptData(jsonResponse);
       console.log(receiptData, jsonResponse);
@@ -71,12 +71,28 @@ const Receipts = props => {
     setModalData({});
     setOpen(false);
   };
-  const handleMonthChange = month => {
-    setMonth(month);
-    // Make new api call with the updated month
-  };
+  const handleMonthChange = async month => {
+    setMonth(month.toString());
+    console.log(`/receipts/${year}/${month}`);
+    const response = await fetch(`/receipts/${year}/${month}`);
+    const jsonResponse = await response.json();
 
-  console.log(props);
+    await setReceiptData(jsonResponse);
+  };
+  const handleYearChange = async year => {
+    if (year === "All") {
+      setYear("");
+      setMonth("");
+      const response = await fetch(`/receipts/`);
+      const jsonResponse = await response.json();
+      await setReceiptData(jsonResponse);
+    } else {
+      setYear(year);
+      const response = await fetch(`/receipts/${year}`);
+      const jsonResponse = await response.json();
+      await setReceiptData(jsonResponse);
+    }
+  };
 
   return (
     <div className={classes.root}>
@@ -85,33 +101,35 @@ const Receipts = props => {
           <Typography variant='h4'>Receipts</Typography>
         </Grid>
         <Grid item>
-        <ReceiptsSelect
-            month={month}
-            months={months}
-            handleMonthChange={handleMonthChange}
+          <YearSelect
+            selectedOption={year}
+            optionsArray={years}
+            handleOptionChange={handleYearChange}
+          />
+        </Grid>
+        <Grid item>
+          <MonthSelect
+            selectedOption={month}
+            optionsArray={months}
+            handleOptionChange={handleMonthChange}
+            isDisabled={year ? false : true}
           />
         </Grid>
       </Grid>
-      <Divider />
-      <ReceiptsModal
-        handleClose={handleClose}
-        open={open}
-        // message={modalData.title}
-        data={modalData}
-      />
+      <ReceiptsModal handleClose={handleClose} open={open} data={modalData} />
       <Grid container direction='row' spacing={3}>
         {receiptData.posts &&
           receiptData.posts.map(receipt => (
-            <Grid item md={4}>
-              <Card>
+            <Grid item md={3} key={receipt.id}>
+              <Card elevation={0} style={{ backgroundColor: "transparent" }}>
                 <CardActionArea>
                   <CardMedia
                     image={receipt.pic_url}
-                    style={{ height: '200px' }}
+                    style={{ height: "200px" }}
                     onClick={() => handleOpen(receipt)}
                   ></CardMedia>
                   <CardContent className={classes.textCenter}>
-                    <Typography>{receipt.receipt_date}</Typography>
+                    <Typography>{formatDate(receipt.receipt_date)}</Typography>
                   </CardContent>
                 </CardActionArea>
               </Card>

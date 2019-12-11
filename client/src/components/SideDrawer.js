@@ -4,7 +4,7 @@ import ListItem from "@material-ui/core/ListItem";
 import Typography from "@material-ui/core/Typography";
 import { makeStyles } from "@material-ui/core/styles";
 import { Link } from "react-router-dom";
-import { Paper } from "@material-ui/core";
+import { Paper, Divider } from "@material-ui/core";
 import logo from "../assets/images/logo.png";
 
 const drawerWidth = 240;
@@ -71,6 +71,11 @@ const useStyles = makeStyles(theme => ({
 const SideDrawer = () => {
   const classes = useStyles();
 
+  const logout = () => {
+    localStorage.clear();
+    document.location.reload();
+  };
+
   return (
     <div>
       <Paper>
@@ -98,6 +103,14 @@ const SideDrawer = () => {
               </ListItem>
             )
           )}
+        </List>
+        <Divider style={{ background: "#FFF" }} />
+        <List>
+          <ListItem button className={classes.sideButton}>
+            <div className={classes.ml40} onClick={logout}>
+              LOGOUT
+            </div>
+          </ListItem>
         </List>
       </div>
     </div>

@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { Typography, Grid } from '@material-ui/core';
 import { withStyles } from '@material-ui/core/styles';
-import Paper from "@material-ui/core/Paper";
+import Paper from '@material-ui/core/Paper';
 import {
   Chart,
   ArgumentAxis,
   ValueAxis,
   SplineSeries
-} from "@devexpress/dx-react-chart-material-ui";
+} from '@devexpress/dx-react-chart-material-ui';
 import { ArgumentScale } from '@devexpress/dx-react-chart';
 
 const useStyles = theme => ({
@@ -30,14 +30,21 @@ class TotalExpensesChart extends Component {
 
   componentDidMount() {
     console.log(this.state.dailyExpenses)
-    fetch("/receipts/daily-expenses/" + this.props.year + "/" + this.props.month)
+    fetch("/receipts/daily-expenses/" + this.props.year + "/" + this.props.month,
+    {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        "Authorization": "Bearer " + localStorage.getItem("token")
+      }
+    })
     .then(response => {
       return response.json();
     })
     .then(results => {
       this.setState({
         dailyExpenses: results.data.map(item => ({
-          date: item.date['date'],
+          date: item.date["date"],
           expense: item.expense
         }))
       })
@@ -46,14 +53,21 @@ class TotalExpensesChart extends Component {
 
   componentDidUpdate(prevProps) {
     if (this.props.year !== prevProps.year || this.props.month !== prevProps.month) {
-      fetch("/receipts/daily-expenses/" + this.props.year + "/" + this.props.month)
+      fetch("/receipts/daily-expenses/" + this.props.year + "/" + this.props.month, 
+      {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+          "Authorization": "Bearer " + localStorage.getItem("token")
+        }
+      })
       .then(response => {
         return response.json();
       })
       .then(results => {
         this.setState({
           dailyExpenses: results.data.map(item => ({
-            date: item.date['date'],
+            date: item.date["date"],
             expense: item.expense
           }))
         })
