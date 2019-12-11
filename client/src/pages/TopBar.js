@@ -44,7 +44,6 @@ const useStyles = makeStyles(theme => ({
   },
   paper: {
     position: 'absolute',
-    width: 1000,
     backgroundColor: theme.palette.background.paper,
     border: '2px solid #000',
     boxShadow: theme.shadows[5],
@@ -61,7 +60,7 @@ const useStyles = makeStyles(theme => ({
 function TopBar({ handleDrawerToggle }) {
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
-  const [page, setPage] = useState("upload");
+  const [page, setPage] = useState("create");
   const [imgUrls, setImgUrls] = useState([]);
   const classes = useStyles();
 
@@ -74,9 +73,12 @@ function TopBar({ handleDrawerToggle }) {
   }
 
   let modalPage;
+  let modalWidth;
   if (page == "create") {
+    modalWidth = 500;
     modalPage = <CreateReceipt handleClose={handleClose} setPage={setPage} imgUrls={imgUrls} />
   } else {
+    modalWidth = 1000;
     modalPage = <UploadReceipt handleClose={handleClose} setPage={setPage} setImgUrls={setImgUrls} />
   }
 
@@ -103,7 +105,9 @@ function TopBar({ handleDrawerToggle }) {
         onClose={handleClose}
       >
         <div style={modalStyle} className={classes.paper}>
-          {modalPage}
+          <div style={{width: modalWidth}}>
+            {modalPage}
+          </div>
         </div>
       </Modal>
     </div>

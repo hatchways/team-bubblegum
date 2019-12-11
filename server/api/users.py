@@ -51,7 +51,7 @@ def get_all_users():
 
 def decode_auth_token(auth_header):
     auth_token = auth_header.split(" ")[1]
-
+    
     try:
         payload = jwt.decode(auth_token, SECRET_KEY)
         user_entry = User.query.filter(User.email == payload['email']).first_or_404()
