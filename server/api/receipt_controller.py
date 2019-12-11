@@ -8,7 +8,6 @@ from werkzeug import secure_filename
 from app import s3
 import csv
 import api.users as usr
-import requests
 
 receipt_controller = Blueprint('receipt_controller',
                                __name__, url_prefix='/receipts')
