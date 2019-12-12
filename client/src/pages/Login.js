@@ -100,11 +100,12 @@ const LoginPage = (props) => {
       })
       .then(res => {
         console.log(res);
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('authorized', JSON.stringify(true));
-        props.setIsAuthed(true);
         if (res.err) {
           setErr(res.err);
+        } else {
+          localStorage.setItem('token', res.token);
+          localStorage.setItem('authorized', JSON.stringify(true));
+          props.setIsAuthed(true);
         }
       })
       .catch(err => {

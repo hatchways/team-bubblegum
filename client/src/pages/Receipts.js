@@ -51,7 +51,11 @@ const Receipts = props => {
 
   useEffect(() => {
     const fetchReceipts = async () => {
-      const response = await fetch(`/receipts/`);
+      const response = await fetch(`/receipts/`, {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+      });
       console.log("what is res", response);
       const jsonResponse = await response.json();
       console.log("what is json", jsonResponse);
@@ -74,7 +78,11 @@ const Receipts = props => {
   const handleMonthChange = async month => {
     setMonth(month.toString());
     console.log(`/receipts/${year}/${month}`);
-    const response = await fetch(`/receipts/${year}/${month}`);
+    const response = await fetch(`/receipts/${year}/${month}`, {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    });
     const jsonResponse = await response.json();
 
     await setReceiptData(jsonResponse);
@@ -83,12 +91,20 @@ const Receipts = props => {
     if (year === "All") {
       setYear("");
       setMonth("");
-      const response = await fetch(`/receipts/`);
+      const response = await fetch(`/receipts/`, {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+      });
       const jsonResponse = await response.json();
       await setReceiptData(jsonResponse);
     } else {
       setYear(year);
-      const response = await fetch(`/receipts/${year}`);
+      const response = await fetch(`/receipts/${year}`, {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+      });
       const jsonResponse = await response.json();
       await setReceiptData(jsonResponse);
     }

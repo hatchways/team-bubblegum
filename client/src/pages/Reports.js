@@ -4,6 +4,7 @@ import { withStyles } from "@material-ui/core/styles";
 import MonthSelect from "../components/MonthSelect";
 import ReportsTable from "../components/ReportsTable";
 import YearSelect from "../components/YearSelect";
+import CustomizedSnackbars from "../components/Snackbar";
 
 const useStyles = theme => ({
   root: {
@@ -20,6 +21,7 @@ const Reports = props => {
   const [receiptData, setReceiptData] = useState([]);
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
+  const [emailMsg, setEmailMsg] = useState(null);
   const months = [
     "January",
     "February",
@@ -38,7 +40,11 @@ const Reports = props => {
 
   useEffect(() => {
     const fetchReport = async () => {
-      const response = await fetch("/receipts/");
+      const response = await fetch("/receipts/", {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+      });
       const jsonResponse = await response.json();
 
       await setReceiptData(jsonResponse);
@@ -51,7 +57,11 @@ const Reports = props => {
 
   const handleMonthChange = async month => {
     setMonth(month.toString());
-    const response = await fetch(`/receipts/${year}/${month}`);
+    const response = await fetch(`/receipts/${year}/${month}`, {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    });
     const jsonResponse = await response.json();
 
     await setReceiptData(jsonResponse);
@@ -60,12 +70,20 @@ const Reports = props => {
     if (year === "All") {
       setYear("");
       setMonth("");
-      const response = await fetch(`/receipts/`);
+      const response = await fetch(`/receipts/`, {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+      });
       const jsonResponse = await response.json();
       await setReceiptData(jsonResponse);
     } else {
       setYear(year);
-      const response = await fetch(`/receipts/${year}`);
+      const response = await fetch(`/receipts/${year}`, {
+        headers: {
+          'Authorization': 'Bearer ' + localStorage.getItem('token')
+        }
+      });
       const jsonResponse = await response.json();
       await setReceiptData(jsonResponse);
     }
@@ -85,6 +103,25 @@ const Reports = props => {
       .catch(err => {
         console.log(err);
       })
+
+  const onBtnClick = () => {
+    fetch(`/receipts/download/${year}/${month}`, {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    })
+      .then(res => {
+        console.log(res);
+        return res.json();
+      })
+      .then(data => {
+        console.log(data);
+        setEmailMsg(data['Message']);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  };
 
   return (
     <div className={classes.root}>
@@ -107,6 +144,12 @@ const Reports = props => {
             handleOptionChange={handleMonthChange}
             isDisabled={year ? false : true}
           />
+        </Grid>
+        <Grid item>
+          {emailMsg && (
+            <CustomizedSnackbars variant='success' message={emailMsg} />
+          )}
+          <Button variant="contained" color="primary" onClick={onBtnClick}>GENERATE CSV</Button>
         </Grid>
       </Grid>
       <Grid container>
