@@ -11,6 +11,9 @@ class User(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     email = db.Column(db.String(120), unique=True, nullable=False)
     password = db.Column(db.String(200), nullable=False)
+    monthlyIncome = db.Column(db.Integer, nullable=True)
+    annualIncome = db.Column(db.Integer, nullable=True)
+    percentSave = db.Column(db.Integer, nullable=True)
     receipts = db.relationship('Receipt', backref='user')
     images = db.relationship('Image', backref='user')
 
@@ -23,7 +26,11 @@ class User(db.Model):
 
     def to_dict(self):
         return {'id': self.id,
-                'email': self.email}
+                'email': self.email,
+                'monthlyIncome': self.monthlyIncome,
+                'annualIncome': self.annualIncome,
+                'percentSave': self.percentSave   
+            }
 
 
 class Receipt(db.Model):

@@ -49,7 +49,27 @@ const Budget = props => {
   const [monthlyIncome, setMonthlyIncome] = useState("");
   const [annualIncome, setAnnualIncome] = useState("");
   const [percentSave, setPercentSave] = useState("");
-  const [err, setErr] = useState("");
+  const [msg, setMsg] = useState({});
+
+  useEffect(() => {
+    const fetchBudget = async () => {
+      const response = await fetch("/budget/", {
+        headers: {
+          method: "GET",
+          "Content-Type": "application/json",
+          Authorization: "Bearer " + localStorage.getItem("token")
+        }
+      });
+      const jsonResponse = await response.json();
+      const { annualIncome, monthlyIncome, percentSave } = jsonResponse;
+      if (annualIncome) setAnnualIncome(annualIncome);
+      if (monthlyIncome) setMonthlyIncome(monthlyIncome);
+      if (percentSave) setPercentSave(percentSave);
+      console.log(jsonResponse);
+    };
+
+    fetchBudget();
+  }, []);
 
   const setAnnual = annualIncome => {
     const annualIncomeToNum = Number(annualIncome);
@@ -67,15 +87,29 @@ const Budget = props => {
   };
   const applyPercentSave = percentSave => {
     setPercentSave(percentSave);
-    setErr("");
+    setMsg({});
   };
-  const updateBudget = () => {
+  const updateBudget = async () => {
     if (percentSave > 100 || percentSave < 0) {
-      return setErr("Please enter a number between 0 to 100");
+      return setMsg({error: "Please enter a number between 0 to 100"});
     }
 
+    setMsg({})
     // Create backend route to save this user data
-    console.log("saved");
+    fetch("/budget/update", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: "Bearer " + localStorage.getItem("token")
+      },
+      body: JSON.stringify({ monthlyIncome, annualIncome, percentSave })
+    })
+      .then(res => {
+        return res.json();
+      })
+      .then(msg => {
+        setMsg(msg)
+      });
   };
 
   return (
@@ -83,8 +117,11 @@ const Budget = props => {
       <Grid container alignItems='center' spacing={(10, 0)}>
         <Grid item className={classes.margin}>
           <Typography variant='h4'>Budget</Typography>
-          {err.length > 0 && (
-            <CustomizedSnackbars variant='error' message={err} />
+          {msg.success && (
+            <CustomizedSnackbars variant='success' message={msg.success} />
+          )}
+          {msg.error && (
+            <CustomizedSnackbars variant='error' message={msg.error} />
           )}
         </Grid>
       </Grid>
