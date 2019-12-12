@@ -8,6 +8,7 @@ import SignupPage from "./pages/Signup";
 import LoginPage from "./pages/Login";
 import Home from "./pages/Home";
 import PrivateRoute from "./PrivateRoute";
+
 import "./App.css";
 
 function App() {

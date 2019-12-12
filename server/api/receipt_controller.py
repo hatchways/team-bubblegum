@@ -1,4 +1,4 @@
-from flask import Blueprint, request, jsonify
+from flask import Blueprint, request, jsonify, send_file
 from models import db, Receipt, Image
 import datetime as dt
 from datetime import datetime
@@ -6,8 +6,10 @@ import calendar
 from config import S3_LOCATION, S3_BUCKET_NAME
 from werkzeug import secure_filename
 from app import s3
+import csv
+from sqlalchemy import extract
+import tasks
 import api.users as usr
-import requests
 
 receipt_controller = Blueprint('receipt_controller',
                                __name__, url_prefix='/receipts')
@@ -205,8 +207,20 @@ def upload_images():
             return jsonify({'locations': image_locations})
         except Exception as e:
             print(e)
-            return jsonify({'did not': 'work'})
+            return jsonify({'Error': 'Failed to upload image(s)'})
 
+@receipt_controller.route('/download/<int:year>/<int:month>')
+def celery_download(year, month):
+    auth_header = request.headers.get('Authorization')
+    if auth_header:
+        user_id = usr.decode_auth_token(auth_header)
+        if not isinstance(user_id, int):
+            return jsonify({"Error": "Failed to authenticate"})
+    else:
+        return jsonify({"Error": "Failed to authenticate"})
+
+    tasks.download_csv.delay(year, month, user_id)
+    return jsonify({"Message": "You will be receiving your report shortly through email"})
 
 def get_receipts_from_database(user_id, start_date, end_date):
     receipts = (Receipt.query

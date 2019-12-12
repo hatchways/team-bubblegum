@@ -4,8 +4,17 @@ import { withStyles } from '@material-ui/core/styles';
 
 const useStyles = theme => ({
   root: {
-    flexGrow: 1
+    flexGrow: 1,
   },
+  button: {
+    color: '#4FD093',
+    padding: '12px 50px',
+    marginTop: 30
+  },
+  textField: {
+    marginTop: 20,
+    width: 500
+  }
 });
 
 class CreateReceipt extends Component {
@@ -53,13 +62,14 @@ class CreateReceipt extends Component {
     const { classes } = this.props;
     return (
       <div className={classes.root}>
-        <Typography variant="h4">Add a Receipt</Typography>
+        <div>
+        <Typography style={{color: '#1A3360', margin: 20, fontWeight: 'bold'}} variant="h4">Add a Receipt</Typography>
         <Divider />
         <FormControl>
-          <TextField label={"Title"} name={"title"} onChange={this.onFormChange} />
-          <TextField label={"Amount"} name={"amount"} onChange={this.onFormChange} />
-          <FormControl>
-          <InputLabel>Category</InputLabel>
+          <TextField className={classes.textField} label={"Title"} placeholder="e.g Starbucks" name={"title"} onChange={this.onFormChange} InputLabelProps={{shrink: true}} />
+          <TextField className={classes.textField} label={"Amount"} placeholder="e.g 5.50" name={"amount"} onChange={this.onFormChange} InputLabelProps={{shrink: true}} />
+          <FormControl className={classes.textField}>
+          <InputLabel shrink>Category</InputLabel>
           <Select name={"category"} value={this.state.category} onChange={this.onFormChange} >
             <MenuItem value={"Food"} >Food</MenuItem>
             <MenuItem value={"Merchandise"} >Merchandise</MenuItem>
@@ -67,9 +77,10 @@ class CreateReceipt extends Component {
             <MenuItem value={"Other"} >Other</MenuItem>
           </Select>
           </FormControl>
-          <TextField type="date" label={"Purchase Date"} name={"receipt_date"} onChange={this.onFormChange} InputLabelProps={{shrink: true}} />
+          <TextField type="date" className={classes.textField} label={"Purchase Date"} name={"receipt_date"} onChange={this.onFormChange} InputLabelProps={{shrink: true}} />
         </FormControl><br />
-        <Button className={classes.button} onClick={this.onBtnClick} >Submit</Button>
+        <Button variant="outlined" className={classes.button} onClick={this.onBtnClick} >Submit</Button>
+        </div>
       </div>
     );
   }

@@ -23,10 +23,13 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.email
-
+  
     def to_dict(self):
         return {'id': self.id,
                 'email': self.email,
+                'password': self.password,
+                'receipts': [receipt.to_dict() for receipt in self.receipts],
+                'images': [image.to_dict() for image in self.images]
                 'monthlyIncome': self.monthlyIncome,
                 'annualIncome': self.annualIncome,
                 'percentSave': self.percentSave   

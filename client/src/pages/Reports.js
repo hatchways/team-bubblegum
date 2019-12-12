@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from "react";
-import { Typography, Divider, Paper, Grid } from "@material-ui/core";
+import { Typography, Divider, Paper, Grid, Button } from "@material-ui/core";
 import { withStyles } from "@material-ui/core/styles";
 import MonthSelect from "../components/MonthSelect";
 import ReportsTable from "../components/ReportsTable";
 import YearSelect from "../components/YearSelect";
+import CustomizedSnackbars from "../components/Snackbar";
 
 const useStyles = theme => ({
   root: {
@@ -21,6 +22,7 @@ const Reports = props => {
   const [budgetData, setBudgetData] = useState({})
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
+  const [emailMsg, setEmailMsg] = useState(null);
   const months = [
     "January",
     "February",
@@ -82,12 +84,31 @@ const Reports = props => {
       await setReceiptData(jsonResponse);
     }
   };
+  const onBtnClick = () => {
+    fetch(`/receipts/download/${year}/${month}`, {
+      headers: {
+        'Authorization': 'Bearer ' + localStorage.getItem('token')
+      }
+    })
+      .then(res => {
+        console.log(res);
+        return res.json();
+      })
+      .then(data => {
+        console.log(data);
+        setEmailMsg(data['Message']);
+      })
+      .catch(err => {
+        console.log(err);
+      })
+  };
 
   return (
     <div className={classes.root}>
       <Grid container alignItems='center' spacing={(10, 0)}>
         <Grid item sm>
           <Typography variant='h4'>Reports</Typography>
+          <Button variant="contained" color="primary" onClick={onBtnClick}>DOWNLOAD</Button>
         </Grid>
         <Grid item>
           <YearSelect
@@ -103,6 +124,12 @@ const Reports = props => {
             handleOptionChange={handleMonthChange}
             isDisabled={year ? false : true}
           />
+        </Grid>
+        <Grid item>
+          {emailMsg && (
+            <CustomizedSnackbars variant='success' message={emailMsg} />
+          )}
+          <Button variant="contained" color="primary" onClick={onBtnClick}>GENERATE CSV</Button>
         </Grid>
       </Grid>
       <Grid container>

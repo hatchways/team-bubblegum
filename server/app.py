@@ -1,4 +1,5 @@
 from flask import Flask
+from celery import Celery
 from flask_bcrypt import Bcrypt
 from config import DB_USERNAME, DB_PASSWORD, DB_NAME, S3_ACCESS_KEY, S3_SECRET_KEY
 import boto3
@@ -15,6 +16,10 @@ db.init_app(app)
 
 with app.app_context():
     db.create_all()
+
+app.config['CELERY_BROKER_URL'] = 'amqp://localhost//'
+celery = Celery(app.name, broker=app.config['CELERY_BROKER_URL'])
+celery.conf.update(app.config)
 
 s3 = boto3.client(
     "s3",
