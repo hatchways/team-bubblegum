@@ -35,10 +35,16 @@ const Reports = props => {
     "December"
   ];
   const years = ["All", "2020", "2019", "2018"];
+  const authHeader = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token")
+    }
+  };
 
   useEffect(() => {
     const fetchReport = async () => {
-      const response = await fetch("/receipts/");
+      const response = await fetch("/receipts/", authHeader);
       const jsonResponse = await response.json();
 
       await setReceiptData(jsonResponse);
@@ -51,7 +57,7 @@ const Reports = props => {
 
   const handleMonthChange = async month => {
     setMonth(month.toString());
-    const response = await fetch(`/receipts/${year}/${month}`);
+    const response = await fetch(`/receipts/${year}/${month}`, authHeader);
     const jsonResponse = await response.json();
 
     await setReceiptData(jsonResponse);
@@ -60,12 +66,12 @@ const Reports = props => {
     if (year === "All") {
       setYear("");
       setMonth("");
-      const response = await fetch(`/receipts/`);
+      const response = await fetch(`/receipts/`, authHeader);
       const jsonResponse = await response.json();
       await setReceiptData(jsonResponse);
     } else {
       setYear(year);
-      const response = await fetch(`/receipts/${year}`);
+      const response = await fetch(`/receipts/${year}`, authHeader);
       const jsonResponse = await response.json();
       await setReceiptData(jsonResponse);
     }
