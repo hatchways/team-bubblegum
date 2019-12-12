@@ -76,6 +76,7 @@ function Home() {
       </nav>
       <main className={classes.content}>
         <div className={classes.toolbar} />
+        <Route exact path='/home' component={Dashboard} />
         <Route path='/home/dashboard' component={Dashboard} />
         <Route path='/home/reports' component={Reports} />
         <Route path='/home/receipts' component={Receipts} />
