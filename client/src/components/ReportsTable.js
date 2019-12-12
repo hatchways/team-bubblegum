@@ -66,10 +66,10 @@ export default function ReportsTable({
       setMonthlySummary("You have spent all of your monthly income.");
     } else if (monthlyIncome * percentSpend <= jsonResponse.total_amount) {
       setTotalAmountColor("yellow");
-      setMonthlySummary(`You have spent at least ${percentSave}% of your monthly income.`);
+      setMonthlySummary(`You have spent at least ${percentSpend}% of your monthly income.`);
     } else if (monthlyIncome * percentSpend >= jsonResponse.total_amount) {
       setTotalAmountColor("green");
-      setMonthlySummary(`You have spent less than ${percentSave}% of your monthly income.`);
+      setMonthlySummary(`You have spent less than ${percentSpend}% of your monthly income.`);
     } else {
       setMonthlySummary("");
     }
