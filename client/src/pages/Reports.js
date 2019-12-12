@@ -88,6 +88,21 @@ const Reports = props => {
       await setReceiptData(jsonResponse);
     }
   };
+  const onBtnClick = () => {
+    fetch(`/receipts/download/${year}/${month}`)
+      .then(res => {
+        console.log(res);
+        res.blob().then(blob => {
+          let url = URL.createObjectURL(blob);
+          let a = document.createElement('a');
+          a.href = url;
+          a.download = 'python-csv.csv';
+          a.click();
+        })
+      })
+      .catch(err => {
+        console.log(err);
+      })
 
   const onBtnClick = () => {
     fetch(`/receipts/download/${year}/${month}`, {
@@ -113,6 +128,7 @@ const Reports = props => {
       <Grid container alignItems='center' spacing={(10, 0)}>
         <Grid item sm>
           <Typography variant='h4'>Reports</Typography>
+          <Button variant="contained" color="primary" onClick={onBtnClick}>DOWNLOAD</Button>
         </Grid>
         <Grid item>
           <YearSelect

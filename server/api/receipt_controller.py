@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify, send_file
-from models import *
+from models import db, Receipt, Image
 import datetime as dt
 from datetime import datetime
 import calendar
@@ -8,9 +8,8 @@ from werkzeug import secure_filename
 from app import s3
 import csv
 from sqlalchemy import extract
-import api.users as usr
-import requests
 import tasks
+import api.users as usr
 
 receipt_controller = Blueprint('receipt_controller',
                                __name__, url_prefix='/receipts')

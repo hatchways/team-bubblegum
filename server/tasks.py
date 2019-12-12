@@ -1,4 +1,3 @@
-from flask import jsonify
 from app import celery, app
 from celery.schedules import crontab
 from datetime import datetime, timedelta
