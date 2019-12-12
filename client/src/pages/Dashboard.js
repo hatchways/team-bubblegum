@@ -25,7 +25,6 @@ class Dashboard extends Component {
           <div className={classes.toolbar} />
           <Typography variant="h4">Dashboard</Typography>
           <Divider />
-          <Typography paragraph>SOME COOL STUFF HERE</Typography>
           <DashboardMonthlySummary />
           <RecentTransactionsModule />
         </main>

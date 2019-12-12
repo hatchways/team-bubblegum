@@ -1,4 +1,4 @@
-from flask import Blueprint, jsonify
+from flask import Blueprint, jsonify, request, flash
 from config import SENDGRID_API_KEY, TEST_EMAIL1, TEST_EMAIL2
 from sendgrid import SendGridAPIClient
 from sendgrid.helpers.mail import Mail, TemplateId
@@ -7,6 +7,7 @@ import api.receipt_controller as rc
 import api.category_controller as cc
 import datetime as dt
 import calendar
+import json
 
 emails = Blueprint('emails', __name__, url_prefix='/emails')
 
@@ -91,11 +92,23 @@ def end_of_month_overview(user_id):
         return jsonify({"Error": "Failed to send monthly overview"})
     return jsonify({"Success": "Monthly overview email sent"})
 
-@emails.route('/reset-password', methods=['PUT'])
-def reset_password():
+
+@emails.route('/forgot-password', methods=['PATCH'])
+def forgot_password():
+    body = json.loads(request.get_data())
+    user_email = body["email"]
+
+    try:
+        # check if user email exists in database
+        User.query.filter(User.email == user_email).first_or_404()
+    except:
+        # flash message to users
+        # flash()
+        return jsonify({"Error": "Invalid email address"})
+
     message = Mail(
         from_email=TEST_EMAIL1,
-        to_emails=TEST_EMAIL2,
+        to_emails=user_email,
         subject='Reset your password',
         html_content='Link to reset password')
     try:

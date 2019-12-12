@@ -66,54 +66,71 @@ const useStyles = makeStyles(theme => ({
     marginTop: '2rem',
     width: '75%'
   },
-  submit: {
+  buttonContainer: {
+    width: '75%'
+  },
+  resetPassword: {
     margin: theme.spacing(8, 0, 2),
     padding: theme.spacing(2, 4),
     color: '#38CC89',
     border: '1px solid #38CC89',
     backgroundColor: '#FFF'
+  },
+  cancel: {
+    margin: theme.spacing(8, 0, 2),
+    padding: theme.spacing(2, 4),
+    color: '#FF4242',
+    border: '1px solid #FF4242',
+    backgroundColor: '#FFF'
   }
 }));
 
-const LoginPage = (props) => {
+const ForgotPasswordForm = () => {
   const classes = useStyles();
 
   const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [err, setErr] = useState('');
+  const [validEmail, setValidEmail] = useState(true);
+  const [emailSent, setEmailSent] = useState(false);
 
-  const loginUser = () => {
+  const sendResetPasswordEmail = () => {
     let status;
     setErr('');
-    fetch('/login', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email, password })
+    fetch("/emails/forgot-password",
+    {
+      method: 'PATCH',
+      body: JSON.stringify({ email })
     })
-      .then(res => {
-        console.log(res);
-        status = res.status;
-        if (status < 500) return res.json();
-        else throw Error('Server error');
-      })
-      .then(res => {
-        console.log(res);
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('authorized', JSON.stringify(true));
-        props.setIsAuthed(true);
-        if (res.err) {
-          setErr(res.err);
-        }
-      })
-      .catch(err => {
-        console.log(err.message);
-      });
-  };
+    .then(response => {
+      status = response.status;
+      if (status === 404) {
+        setValidEmail(false);
+      }
+      return response.json();
+    })
+    .then(results => {
+      console.log(results);
+      if (results.success || status < 400) {
+        setValidEmail(true);
+        setEmailSent(true);
+      } else {
+        setErr(results.Error)
+        setValidEmail(false);
+        setEmailSent(false);
+      }
+    })
+    .catch(err => {
+      console.log(err.message);
+    })
+  }
 
-  if (props.isAuthed) {
-    return <Redirect to='/home' />
+  if (!validEmail) {
+    console.log("Invalid email")
+    // show error message to user
+  }
+
+  if (emailSent) {
+    return <Redirect to="/reset-password-email-sent" />
   }
 
   return (
@@ -141,7 +158,7 @@ const LoginPage = (props) => {
           </Grid>
           <Grid container>
             <form className={classes.form}>
-              <h1>Welcome back!</h1>
+              <h1>Forgot your password?</h1>
               {err.length > 0 && (
                 <CustomizedSnackbars variant='error' message={err} />
               )}
@@ -151,25 +168,18 @@ const LoginPage = (props) => {
                 onChange={e => setEmail(e.target.value)}
                 value={email}
               />
-              <TextField
-                label={'Password'}
-                className={classes.formInput}
-                onChange={e => setPassword(e.target.value)}
-                value={password}
-                type='password'
-              />
-              <div>
-                <Button className={classes.submit} onClick={loginUser}>
-                  Log In
-                </Button>
-                <div>
-                  <Typography>
-                    <Link href="/forgot-password" variant="body2">
-                      Forgot your password?
-                    </Link>
-                  </Typography>
-                </div>
-              </div>
+              <Grid container className={classes.buttonContainer} direction="row" justify="space-between">
+                <Grid>
+                  <Button className={classes.resetPassword} onClick={sendResetPasswordEmail}>
+                    Reset password
+                  </Button>
+                </Grid>
+                <Grid>
+                  <Button className={classes.cancel} href={"/login"}>
+                    Cancel
+                  </Button>
+                </Grid>
+              </Grid>
             </form>
           </Grid>
         </div>
@@ -178,4 +188,4 @@ const LoginPage = (props) => {
   );
 };
 
-export default LoginPage;
+export default ForgotPasswordForm;
