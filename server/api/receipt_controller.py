@@ -10,6 +10,7 @@ import csv
 from sqlalchemy import extract
 import api.users as usr
 import requests
+import tasks
 
 receipt_controller = Blueprint('receipt_controller',
                                __name__, url_prefix='/receipts')
@@ -209,21 +210,18 @@ def upload_images():
             print(e)
             return jsonify({'Error': 'Failed to upload image(s)'})
 
-@receipt_controller.route('/download/<int:month>')
-def download_csv(month):
-    user_receipts = Receipt.query.filter_by(user_id=1).filter(extract('year', Receipt.receipt_date) == datetime.now().year).filter(extract('month', Receipt.receipt_date) == month).all()
-    try:
-        headers = ['title', 'amount', 'category', 'receipt_date']
-        with open('python-csv.csv', 'w') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(headers)
-            for receipt in user_receipts:
-                row = [receipt.title, receipt.amount, receipt.category, receipt.receipt_date]
-                writer.writerow(row)
-        return send_file('python-csv.csv', attachment_filename='python-csv.csv', as_attachment=True)
-    except Exception as e:
-        print(e)
-        return jsonify({'Error': 'Failed to download'})
+@receipt_controller.route('/download/<int:year>/<int:month>')
+def celery_download(year, month):
+    auth_header = request.headers.get('Authorization')
+    if auth_header:
+        user_id = usr.decode_auth_token(auth_header)
+        if not isinstance(user_id, int):
+            return jsonify({"Error": "Failed to authenticate"})
+    else:
+        return jsonify({"Error": "Failed to authenticate"})
+
+    tasks.download_csv.delay(year, month, user_id)
+    return jsonify({"Message": "You will be receiving your report shortly through email"})
 
 def get_receipts_from_database(user_id, start_date, end_date):
     receipts = (Receipt.query
