@@ -18,6 +18,7 @@ const useStyles = theme => ({
 
 const Reports = props => {
   const [receiptData, setReceiptData] = useState([]);
+  const [budgetData, setBudgetData] = useState({})
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const months = [
@@ -47,7 +48,12 @@ const Reports = props => {
       const response = await fetch("/receipts/", authHeader);
       const jsonResponse = await response.json();
 
+      const budgetResponse =  await fetch("/budget/", authHeader)
+      const jsonBudgetResponse = await budgetResponse.json()
+
       await setReceiptData(jsonResponse);
+      await setBudgetData(jsonBudgetResponse)
+      console.log(receiptData, budgetData)
     };
 
     fetchReport();
@@ -101,7 +107,7 @@ const Reports = props => {
       </Grid>
       <Grid container>
         <Grid container item xs={12}>
-          <ReportsTable receiptData={receiptData} />
+          <ReportsTable receiptData={receiptData} budgetData={budgetData}/>
         </Grid>
       </Grid>
     </div>

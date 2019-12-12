@@ -46,9 +46,9 @@ const useStyles = theme => ({
 
 const Budget = props => {
   const { classes } = props;
-  const [monthlyIncome, setMonthlyIncome] = useState("");
-  const [annualIncome, setAnnualIncome] = useState("");
-  const [percentSave, setPercentSave] = useState("");
+  const [monthlyIncome, setMonthlyIncome] = useState(0);
+  const [annualIncome, setAnnualIncome] = useState(0);
+  const [percentSave, setPercentSave] = useState(0);
   const [msg, setMsg] = useState({});
 
   useEffect(() => {
@@ -90,11 +90,12 @@ const Budget = props => {
     setMsg({});
   };
   const updateBudget = async () => {
+    setMsg({});
     if (percentSave > 100 || percentSave < 0) {
-      return setMsg({error: "Please enter a number between 0 to 100"});
+      return setMsg({ error: "Please enter a number between 0 to 100" });
     }
 
-    setMsg({})
+    if(percentSave === '') setPercentSave(0)
     // Create backend route to save this user data
     fetch("/budget/update", {
       method: "PUT",
@@ -108,7 +109,7 @@ const Budget = props => {
         return res.json();
       })
       .then(msg => {
-        setMsg(msg)
+        setMsg(msg);
       });
   };
 
