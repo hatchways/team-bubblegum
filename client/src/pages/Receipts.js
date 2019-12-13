@@ -126,7 +126,7 @@ const Receipts = props => {
               <Card elevation={0} style={{ backgroundColor: "transparent" }}>
                 <CardActionArea>
                   <CardMedia
-                    image={receipt.pic_url}
+                    image={receipt.images[0].location}
                     style={{ height: "200px" }}
                     onClick={() => handleOpen(receipt)}
                   ></CardMedia>
