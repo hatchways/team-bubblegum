@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { makeStyles } from "@material-ui/core/styles";
 import Table from "@material-ui/core/Table";
 import TableBody from "@material-ui/core/TableBody";
@@ -30,25 +30,50 @@ const useStyles = makeStyles({
   }
 });
 
-export default function ReportsTable({ receiptData: { posts, total_amount } }) {
+export default function ReportsTable({
+  receiptData: { posts, total_amount },
+  budgetData: { monthlyIncome, percentSave }
+}) {
   const classes = useStyles();
+  const [monthlySummary, setMonthlySummary] = useState("");
+  const [totalAmountColor, setTotalAmountColor] = useState("green");
 
-  // dummy data for monthly income
-  const monthlyIncome = 800;
-  let reportSummary = "";
-  let totalAmountColor = "green";
-  if (monthlyIncome <= total_amount) {
-    totalAmountColor = "red";
-    reportSummary = "You have spent all your income.";
-  } else if (monthlyIncome * 0.8 <= total_amount) {
-    totalAmountColor = "yellow";
-    reportSummary = "You have spent at least 80% of your income.";
-  } else if (monthlyIncome * 0.8 >= total_amount) {
-    totalAmountColor = "green";
-    reportSummary = "You have spent less than 80% of your income.";
-  } else {
-    reportSummary = "";
-  }
+  const authHeader = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token")
+    }
+  };
+
+  useEffect(() => {
+    calculateMonthlySummary();
+  }, [monthlyIncome, percentSave]);
+
+  const calculateMonthlySummary = async () => {
+    const currentMonth = new Date().getMonth() + 1;
+    const currentYear = new Date().getFullYear();
+    const response = await fetch(
+      `/receipts/${currentYear}/${currentMonth}`,
+      authHeader
+    );
+    const jsonResponse = await response.json();
+    const percentSpend = percentSave ? (100 - percentSave) / 100 : null;
+
+    if (!monthlyIncome || !percentSave) {
+      setMonthlySummary("");
+    } else if (monthlyIncome <= jsonResponse.total_amount) {
+      setTotalAmountColor("red");
+      setMonthlySummary("You have spent all of your monthly income.");
+    } else if (monthlyIncome * percentSpend <= jsonResponse.total_amount) {
+      setTotalAmountColor("yellow");
+      setMonthlySummary(`You have spent at least ${percentSpend}% of your monthly income.`);
+    } else if (monthlyIncome * percentSpend >= jsonResponse.total_amount) {
+      setTotalAmountColor("green");
+      setMonthlySummary(`You have spent less than ${percentSpend}% of your monthly income.`);
+    } else {
+      setMonthlySummary("");
+    }
+  };
 
   return (
     <Paper className={classes.root}>
@@ -62,7 +87,7 @@ export default function ReportsTable({ receiptData: { posts, total_amount } }) {
         </Box>
         <Box>
           <Typography variant='h5' className={classes[totalAmountColor]}>
-            {reportSummary ? reportSummary : ""}
+            {monthlySummary}
           </Typography>
         </Box>
       </Toolbar>

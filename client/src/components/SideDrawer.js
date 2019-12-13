@@ -90,7 +90,7 @@ const SideDrawer = () => {
       </Paper>
       <div className={classes.sideBar}>
         <List>
-          {["dashboard", "reports", "receipts", "profile"].map(
+          {["dashboard", "reports", "receipts", "budget"].map(
             (text, index) => (
               <ListItem
                 key={text}

@@ -19,6 +19,7 @@ const useStyles = theme => ({
 
 const Reports = props => {
   const [receiptData, setReceiptData] = useState([]);
+  const [budgetData, setBudgetData] = useState({})
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [emailMsg, setEmailMsg] = useState(null);
@@ -37,17 +38,24 @@ const Reports = props => {
     "December"
   ];
   const years = ["All", "2020", "2019", "2018"];
+  const authHeader = {
+    headers: {
+      "Content-Type": "application/json",
+      Authorization: "Bearer " + localStorage.getItem("token")
+    }
+  };
 
   useEffect(() => {
     const fetchReport = async () => {
-      const response = await fetch("/receipts/", {
-        headers: {
-          'Authorization': 'Bearer ' + localStorage.getItem('token')
-        }
-      });
+      const response = await fetch("/receipts/", authHeader);
       const jsonResponse = await response.json();
 
+      const budgetResponse =  await fetch("/budget/", authHeader)
+      const jsonBudgetResponse = await budgetResponse.json()
+
       await setReceiptData(jsonResponse);
+      await setBudgetData(jsonBudgetResponse)
+      console.log(receiptData, budgetData)
     };
 
     fetchReport();
@@ -57,11 +65,7 @@ const Reports = props => {
 
   const handleMonthChange = async month => {
     setMonth(month.toString());
-    const response = await fetch(`/receipts/${year}/${month}`, {
-      headers: {
-        'Authorization': 'Bearer ' + localStorage.getItem('token')
-      }
-    });
+    const response = await fetch(`/receipts/${year}/${month}`, authHeader);
     const jsonResponse = await response.json();
 
     await setReceiptData(jsonResponse);
@@ -70,41 +74,16 @@ const Reports = props => {
     if (year === "All") {
       setYear("");
       setMonth("");
-      const response = await fetch(`/receipts/`, {
-        headers: {
-          'Authorization': 'Bearer ' + localStorage.getItem('token')
-        }
-      });
+      const response = await fetch(`/receipts/`, authHeader);
       const jsonResponse = await response.json();
       await setReceiptData(jsonResponse);
     } else {
       setYear(year);
-      const response = await fetch(`/receipts/${year}`, {
-        headers: {
-          'Authorization': 'Bearer ' + localStorage.getItem('token')
-        }
-      });
+      const response = await fetch(`/receipts/${year}`, authHeader);
       const jsonResponse = await response.json();
       await setReceiptData(jsonResponse);
     }
   };
-  const onBtnClick = () => {
-    fetch(`/receipts/download/${year}/${month}`)
-      .then(res => {
-        console.log(res);
-        res.blob().then(blob => {
-          let url = URL.createObjectURL(blob);
-          let a = document.createElement('a');
-          a.href = url;
-          a.download = 'python-csv.csv';
-          a.click();
-        })
-      })
-      .catch(err => {
-        console.log(err);
-      })
-  }
-
   const onBtnClick = () => {
     fetch(`/receipts/download/${year}/${month}`, {
       headers: {
@@ -155,7 +134,7 @@ const Reports = props => {
       </Grid>
       <Grid container>
         <Grid container item xs={12}>
-          <ReportsTable receiptData={receiptData} />
+          <ReportsTable receiptData={receiptData} budgetData={budgetData}/>
         </Grid>
       </Grid>
     </div>

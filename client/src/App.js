@@ -18,19 +18,34 @@ import ResetPasswordConfirmed from "./pages/ResetPasswordConfirmed";
 function App() {
   const [isAuthed, setIsAuthed] = useState(false);
   useEffect(() => {
-    localStorage.getItem('authorized') ? setIsAuthed(true) : setIsAuthed(false);
+    localStorage.getItem("authorized") ? setIsAuthed(true) : setIsAuthed(false);
   }, []);
 
   return (
     <MuiThemeProvider theme={theme}>
       <BrowserRouter>
-        <Route path='/signup' component={SignupPage} />
-        <Route 
+        <Route
+          path='/signup'
+          render={props => {
+            return (
+              <SignupPage
+                {...props}
+                isAuthed={isAuthed}
+                setIsAuthed={setIsAuthed}
+              />
+            );
+          }}
+        />
+        <Route
           path='/login'
           render={props => {
             return (
-              <LoginPage {...props} isAuthed={isAuthed} setIsAuthed={setIsAuthed} />
-            )
+              <LoginPage
+                {...props}
+                isAuthed={isAuthed}
+                setIsAuthed={setIsAuthed}
+              />
+            );
           }}
         />
         <Route path='/forgot-password' component={ForgotPasswordForm} />
