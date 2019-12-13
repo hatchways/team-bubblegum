@@ -10,6 +10,10 @@ import Home from "./pages/Home";
 import PrivateRoute from "./PrivateRoute";
 
 import "./App.css";
+import ForgotPasswordForm from "./pages/ForgotPasswordForm";
+import ResetPasswordEmailSent from "./pages/ResetPasswordEmailSent";
+import ResetPasswordForm from "./pages/ResetPasswordForm";
+import ResetPasswordConfirmed from "./pages/ResetPasswordConfirmed";
 
 function App() {
   const [isAuthed, setIsAuthed] = useState(false);
@@ -29,6 +33,10 @@ function App() {
             )
           }}
         />
+        <Route path='/forgot-password' component={ForgotPasswordForm} />
+        <Route path='/reset-password-email-sent' component={ResetPasswordEmailSent} />
+        <Route path='/reset-password' component={ResetPasswordForm} />
+        <Route path='/reset-password-confirmed' component={ResetPasswordConfirmed} />
         <PrivateRoute path='/home' isAuthed={isAuthed} component={Home} />
       </BrowserRouter>
     </MuiThemeProvider>

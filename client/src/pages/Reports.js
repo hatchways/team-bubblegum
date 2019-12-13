@@ -103,6 +103,7 @@ const Reports = props => {
       .catch(err => {
         console.log(err);
       })
+  }
 
   const onBtnClick = () => {
     fetch(`/receipts/download/${year}/${month}`, {

@@ -66,7 +66,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: '2rem',
     width: '75%'
   },
-  submit: {
+  resetPasswordButton: {
     margin: theme.spacing(8, 0, 2),
     padding: theme.spacing(2, 4),
     color: '#38CC89',
@@ -75,46 +75,45 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const LoginPage = (props) => {
+const ResetPasswordForm = () => {
   const classes = useStyles();
 
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [confirmPassword, setConfirmPassword] = useState('')
+  const [passwordUpdated, setPasswordUpdated] = useState(false)
   const [err, setErr] = useState('');
 
-  const loginUser = () => {
+  const resetPassword = () => {
     let status;
     setErr('');
-    fetch('/login', {
+    fetch("/reset-password/" + window.location.href.substring(window.location.href.lastIndexOf('/') + 1),
+    {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json'
       },
-      body: JSON.stringify({ email, password })
+      body: JSON.stringify({ password, confirmPassword })
     })
-      .then(res => {
-        console.log(res);
-        status = res.status;
-        if (status < 500) return res.json();
-        else throw Error('Server error');
-      })
-      .then(res => {
-        console.log(res);
-        if (res.err) {
-          setErr(res.err);
-        } else {
-          localStorage.setItem('token', res.token);
-          localStorage.setItem('authorized', JSON.stringify(true));
-          props.setIsAuthed(true);
-        }
-      })
-      .catch(err => {
-        console.log(err.message);
-      });
-  };
+    .then(response => {
+      status = response.status;
+      if (status < 500) return response.json();
+      else throw Error('Server error');
+    })
+    .then(results => {
+      console.log(results);
+      if (results.Error) {
+        setErr(results.Error);
+      } else {
+        setPasswordUpdated(true);
+      }
+    })
+    .catch(err => {
+      console.log(err.message);
+    })
+  }
 
-  if (props.isAuthed) {
-    return <Redirect to='/home' />
+  if (passwordUpdated) {
+    return <Redirect to="/reset-password-confirmed" />
   }
 
   return (
@@ -142,16 +141,10 @@ const LoginPage = (props) => {
           </Grid>
           <Grid container>
             <form className={classes.form}>
-              <h1>Welcome back!</h1>
+              <h1>Reset your password</h1>
               {err.length > 0 && (
                 <CustomizedSnackbars variant='error' message={err} />
               )}
-              <TextField
-                label={'E-mail address'}
-                className={classes.formInput}
-                onChange={e => setEmail(e.target.value)}
-                value={email}
-              />
               <TextField
                 label={'Password'}
                 className={classes.formInput}
@@ -159,17 +152,17 @@ const LoginPage = (props) => {
                 value={password}
                 type='password'
               />
+              <TextField
+                label={'Confirm password'}
+                className={classes.formInput}
+                onChange={e => setConfirmPassword(e.target.value)}
+                value={confirmPassword}
+                type='password'
+              />
               <div>
-                <Button className={classes.submit} onClick={loginUser}>
-                  Log In
+                <Button className={classes.resetPasswordButton} onClick={resetPassword}>
+                  Reset password
                 </Button>
-                <div>
-                  <Typography>
-                    <Link href="/forgot-password" variant="body2">
-                      Forgot your password?
-                    </Link>
-                  </Typography>
-                </div>
               </div>
             </form>
           </Grid>
@@ -179,4 +172,4 @@ const LoginPage = (props) => {
   );
 };
 
-export default LoginPage;
+export default ResetPasswordForm;
