@@ -11,7 +11,7 @@ const useStyles = theme => ({
   },
   content: {
     flexGrow: 1,
-    padding: theme.spacing(0, 40)
+    padding: theme.spacing(0, 15)
   },
   toolbar: theme.mixins.toolbar
 });
