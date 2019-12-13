@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { TextField, Button, Grid } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
+import { Redirect } from 'react-router-dom';
 import bgImage from '../assets/images/4c49d03df598d6822be307208f2333b1e9b42279.png';
 import logo from '../assets/images/logo.png';
 import CustomizedSnackbars from '../components/Snackbar';
@@ -108,6 +109,10 @@ const SignupPage = (props) => {
         console.log(err.message);
       });
   };
+
+  if (props.isAuthed) {
+    return <Redirect to='/home' />
+  }
 
   return (
     <Grid container className={classes.root}>
