@@ -29,7 +29,7 @@ class User(db.Model):
                 'email': self.email,
                 'password': self.password,
                 'receipts': [receipt.to_dict() for receipt in self.receipts],
-                'images': [image.to_dict() for image in self.images]
+                'images': [image.to_dict() for image in self.images],
                 'monthlyIncome': self.monthlyIncome,
                 'annualIncome': self.annualIncome,
                 'percentSave': self.percentSave   
