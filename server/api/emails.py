@@ -26,6 +26,7 @@ def end_of_month_overview(user_id):
     # calculate daily expense total
     end = calendar.monthrange(year, month)[1]
     date_label = ""
+    date_data = ""
     daily_expenses = ""
     for date in range(1, end + 1):
         start_date = dt.date(year, month, date)
@@ -34,9 +35,11 @@ def end_of_month_overview(user_id):
         daily_total = rc.get_receipts_total_expense(receipts)
         if date < end:
             date_label = date_label + str(date) + "|"
+            date_data = date_data + str(date) + ","
             daily_expenses = daily_expenses + str(daily_total) + ","
         else:
             date_label += str(date)
+            date_data += str(date)
             daily_expenses += str(daily_total)
 
     # a chart that we can display in the email (temporary?)
@@ -47,9 +50,9 @@ def end_of_month_overview(user_id):
                   'chxt=x,y&'  # axis to display
                   'chxr=0,1,' + str(end) + '&'  # axis range
                   'chxl=0:|' + date_label + '&'  # custom x-axis label
-                  'chd=t:' + date_label + '|' + daily_expenses)  # chart data
+                  'chd=t:' + date_data + '|' + daily_expenses)  # chart data
 
-    categories = cc.get_category_expenses(year, month, True, user_id)["categories"]
+    categories = cc.get_category_expenses(year, month, True, user_id).json["categories"]
 
     # calculate total_expense first to calculate category expense % later
     total_expense = 0

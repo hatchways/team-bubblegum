@@ -60,7 +60,7 @@ const useStyles = makeStyles(theme => ({
 function TopBar({ handleDrawerToggle }) {
   const [modalStyle] = useState(getModalStyle);
   const [open, setOpen] = useState(false);
-  const [page, setPage] = useState("create");
+  const [page, setPage] = useState("upload");
   const [imgUrls, setImgUrls] = useState([]);
   const classes = useStyles();
 
