@@ -30,6 +30,7 @@ def download_csv(year, month, user_id):
         # calculate daily expense total
         end = datetime.now().day
         date_label = ""
+        date_data = ""
         daily_expenses = ""
         for date in range(1, end + 1):
             start_date = dt.date(year, month, date)
@@ -38,11 +39,13 @@ def download_csv(year, month, user_id):
             daily_total = rc.get_receipts_total_expense(receipts)
             if date < end:
                 date_label = date_label + str(date) + "|"
+                date_data = date_data + str(date) + ","
                 daily_expenses = daily_expenses + str(daily_total) + ","
             else:
                 date_label += str(date)
+                date_data += str(date)
                 daily_expenses += str(daily_total)
-        
+
         # a chart that we can display in the email (temporary?)
         line_chart = ('https://image-charts.com/chart?'
                     'chtt=Daily+Expenses+in+' + calendar.month_name[month] + '&'  # chart title
@@ -51,9 +54,9 @@ def download_csv(year, month, user_id):
                     'chxt=x,y&'  # axis to display
                     'chxr=0,1,' + str(end) + '&'  # axis range
                     'chxl=0:|' + date_label + '&'  # custom x-axis label
-                    'chd=t:' + date_label + '|' + daily_expenses)  # chart data
+                    'chd=t:' + date_data + '|' + daily_expenses)  # chart data
 
-        categories = cc.get_category_expenses(year, month, True, user_id)
+        categories = cc.get_category_expenses(year, month, True, user_id).json["categories"]
 
         # calculate total_expense first to calculate category expense % later
         total_expense = 0
