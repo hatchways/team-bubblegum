@@ -54,7 +54,7 @@ export default function ReceiptsModal({ handleClose, open, data }) {
             {data.images &&
               data.images.map(image => {
                 return (
-                  <div className={classes.imgContainer}>
+                  <div className={classes.imgContainer} key={image.id}>
                     <img
                       className={classes.receiptImage}
                       src={image.location}
