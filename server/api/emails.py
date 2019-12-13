@@ -45,7 +45,7 @@ def end_of_month_overview(user_id):
                   'cht=lxy&'  # chart type = line chart
                   'chs=350x250&'  # chart size
                   'chxt=x,y&'  # axis to display
-                  'chxr=0,1,' + end + '&'  # axis range
+                  'chxr=0,1,' + str(end) + '&'  # axis range
                   'chxl=0:|' + date_label + '&'  # custom x-axis label
                   'chd=t:' + date_label + '|' + daily_expenses)  # chart data
 
