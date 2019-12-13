@@ -7,6 +7,8 @@ from config import S3_LOCATION, S3_BUCKET_NAME
 from werkzeug import secure_filename
 from app import s3
 import csv
+from sqlalchemy import extract
+import tasks
 import api.users as usr
 
 receipt_controller = Blueprint('receipt_controller',
@@ -208,26 +210,17 @@ def upload_images():
             return jsonify({'Error': 'Failed to upload image(s)'})
 
 @receipt_controller.route('/download/<int:year>/<int:month>')
-def download_csv(year, month):
-    print(year, month)
-    try:
-        headers = ['title', 'amount', 'category', 'receipt_date']
-        rows = [
-            ['starbucks', 4.25, 'Food', '2019-11-07'],
-            ['disneyland', 145, 'Travel', '2019-11-09'],
-            ['ramen', 9.63, 'Food', '2019-12-11'],
-            ['macys', 87.24, 'Merchandise', '2019-11-01'],
-            ['itea', 4.75, 'Food', '2019-11-04']
-        ]
-        with open('python-csv.csv', 'w') as csvfile:
-            writer = csv.writer(csvfile)
-            writer.writerow(headers)
-            for row in rows:
-                writer.writerow(row)
-        return send_file('python-csv.csv', attachment_filename='python-csv.csv', as_attachment=True)
-    except Exception as e:
-        print(e)
-        return jsonify({'Error': 'Failed to download'})
+def celery_download(year, month):
+    auth_header = request.headers.get('Authorization')
+    if auth_header:
+        user_id = usr.decode_auth_token(auth_header)
+        if not isinstance(user_id, int):
+            return jsonify({"Error": "Failed to authenticate"})
+    else:
+        return jsonify({"Error": "Failed to authenticate"})
+
+    tasks.download_csv.delay(year, month, user_id)
+    return jsonify({"Message": "You will be receiving your report shortly through email"})
 
 def get_receipts_from_database(user_id, start_date, end_date):
     receipts = (Receipt.query
