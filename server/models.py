@@ -23,7 +23,7 @@ class User(db.Model):
 
     def __repr__(self):
         return '<User %r>' % self.email
-  
+
     def to_dict(self):
         return {'id': self.id,
                 'email': self.email,
@@ -32,8 +32,7 @@ class User(db.Model):
                 'images': [image.to_dict() for image in self.images],
                 'monthlyIncome': self.monthlyIncome,
                 'annualIncome': self.annualIncome,
-                'percentSave': self.percentSave   
-            }
+                'percentSave': self.percentSave}
 
 
 class Receipt(db.Model):
@@ -82,9 +81,7 @@ class Image(db.Model):
     user_id = db.Column(db.Integer, db.ForeignKey('user.id'), nullable=False)
 
     def to_dict(self):
-        return {
-            'id': self.id,
-            'location': self.location,
-            'receipt_id': self.receipt_id,
-            'user_id': self.user_id
-        }
+        return {'id': self.id,
+                'location': self.location,
+                'receipt_id': self.receipt_id,
+                'user_id': self.user_id}

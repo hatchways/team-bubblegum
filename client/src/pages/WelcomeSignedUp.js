@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
-import { TextField, Button, Grid } from '@material-ui/core';
+import { Button, Grid, Typography } from '@material-ui/core';
 import { makeStyles } from '@material-ui/core/styles';
-import { Redirect } from 'react-router-dom';
 import bgImage from '../assets/images/4c49d03df598d6822be307208f2333b1e9b42279.png';
 import logo from '../assets/images/logo.png';
+
 import CustomizedSnackbars from '../components/Snackbar';
 
 const useStyles = makeStyles(theme => ({
@@ -65,7 +65,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: '2rem',
     width: '75%'
   },
-  submit: {
+  login: {
     margin: theme.spacing(8, 0, 2),
     padding: theme.spacing(2, 4),
     color: '#38CC89',
@@ -74,48 +74,10 @@ const useStyles = makeStyles(theme => ({
   }
 }));
 
-const SignupPage = (props) => {
+const WelcomeSignedUp = () => {
   const classes = useStyles();
 
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
   const [err, setErr] = useState('');
-  const [signedUp, setSignedUp] = useState(false);
-
-  const createUser = e => {
-    e.preventDefault();
-    setErr('');
-    let status;
-    fetch('/signup', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ email, password })
-    })
-      .then(res => {
-        status = res.status;
-        if (status < 500) return res.json();
-        else throw Error('Server error');
-      })
-      .then(res => {
-        localStorage.setItem('token', res.token);
-        localStorage.setItem('authorized', JSON.stringify(true));
-        props.setIsAuthed(true);
-        if (res.err) {
-          setErr(res.err);
-        } else {
-          setSignedUp(true);
-        }
-      })
-      .catch(err => {
-        console.log(err.message);
-      });
-  };
-
-  if (signedUp) {
-    return <Redirect to="/welcome" />
-  }
 
   return (
     <Grid container className={classes.root}>
@@ -131,37 +93,27 @@ const SignupPage = (props) => {
       <Grid container item direction='column' xs={12} sm={8} md={7}>
         <div className={classes.paper}>
           <Grid container justify='flex-end' alignItems='center'>
-            <p style={{ margin: '1rem' }}>Already have an account?</p>
+            <p style={{ margin: '1rem' }}>Don't have an account?</p>
             <Button
               variant='contained'
               className={classes.linkButton}
-              href={'/login'}
+              href={'/signup'}
             >
-              Log in
+              Create
             </Button>
           </Grid>
           <Grid container>
             <form className={classes.form}>
-              <h1>Create an account</h1>
+              <h1>Thank you for signing up!</h1>
               {err.length > 0 && (
                 <CustomizedSnackbars variant='error' message={err} />
               )}
-              <TextField
-                label={'E-mail address'}
-                className={classes.formInput}
-                onChange={e => setEmail(e.target.value)}
-                value={email}
-              />
-              <TextField
-                label={'Password'}
-                className={classes.formInput}
-                onChange={e => setPassword(e.target.value)}
-                value={password}
-                type='password'
-              />
+              <Typography paragraph>
+                You may now login with your newly created account!
+              </Typography>
               <div>
-                <Button className={classes.submit} onClick={createUser}>
-                  Create
+                <Button className={classes.login} href={"/login"}>
+                  Login
                 </Button>
               </div>
             </form>
@@ -172,4 +124,4 @@ const SignupPage = (props) => {
   );
 };
 
-export default SignupPage;
+export default WelcomeSignedUp;

@@ -19,7 +19,7 @@ const useStyles = theme => ({
 
 const Reports = props => {
   const [receiptData, setReceiptData] = useState([]);
-  const [budgetData, setBudgetData] = useState({})
+  const [budgetData, setBudgetData] = useState({});
   const [month, setMonth] = useState("");
   const [year, setYear] = useState("");
   const [emailMsg, setEmailMsg] = useState(null);

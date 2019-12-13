@@ -14,6 +14,7 @@ import ForgotPasswordForm from "./pages/ForgotPasswordForm";
 import ResetPasswordEmailSent from "./pages/ResetPasswordEmailSent";
 import ResetPasswordForm from "./pages/ResetPasswordForm";
 import ResetPasswordConfirmed from "./pages/ResetPasswordConfirmed";
+import WelcomeSignedUp from "./pages/WelcomeSignedUp";
 
 function App() {
   const [isAuthed, setIsAuthed] = useState(false);
@@ -48,6 +49,7 @@ function App() {
             );
           }}
         />
+        <Route path='/welcome' component={WelcomeSignedUp} />
         <Route path='/forgot-password' component={ForgotPasswordForm} />
         <Route path='/reset-password-email-sent' component={ResetPasswordEmailSent} />
         <Route path='/reset-password' component={ResetPasswordForm} />
