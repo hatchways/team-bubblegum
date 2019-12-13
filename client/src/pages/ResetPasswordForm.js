@@ -66,7 +66,7 @@ const useStyles = makeStyles(theme => ({
     marginTop: '2rem',
     width: '75%'
   },
-  resetPassword: {
+  resetPasswordButton: {
     margin: theme.spacing(8, 0, 2),
     padding: theme.spacing(2, 4),
     color: '#38CC89',
@@ -78,10 +78,43 @@ const useStyles = makeStyles(theme => ({
 const ResetPasswordForm = () => {
   const classes = useStyles();
 
-  const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('')
+  const [passwordUpdated, setPasswordUpdated] = useState(false)
   const [err, setErr] = useState('');
+
+  const resetPassword = () => {
+    let status;
+    setErr('');
+    fetch("/reset-password/" + window.location.href.substring(window.location.href.lastIndexOf('/') + 1),
+    {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ password, confirmPassword })
+    })
+    .then(response => {
+      status = response.status;
+      if (status < 500) return response.json();
+      else throw Error('Server error');
+    })
+    .then(results => {
+      console.log(results);
+      if (results.Error) {
+        setErr(results.Error);
+      } else {
+        setPasswordUpdated(true);
+      }
+    })
+    .catch(err => {
+      console.log(err.message);
+    })
+  }
+
+  if (passwordUpdated) {
+    return <Redirect to="/reset-password-confirmed" />
+  }
 
   return (
     <Grid container className={classes.root}>
@@ -127,7 +160,7 @@ const ResetPasswordForm = () => {
                 type='password'
               />
               <div>
-                <Button className={classes.resetPassword}>
+                <Button className={classes.resetPasswordButton} onClick={resetPassword}>
                   Reset password
                 </Button>
               </div>

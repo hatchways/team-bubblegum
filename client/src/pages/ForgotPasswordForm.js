@@ -90,7 +90,6 @@ const ForgotPasswordForm = () => {
 
   const [email, setEmail] = useState('');
   const [err, setErr] = useState('');
-  const [validEmail, setValidEmail] = useState(true);
   const [emailSent, setEmailSent] = useState(false);
 
   const sendResetPasswordEmail = () => {
@@ -98,35 +97,28 @@ const ForgotPasswordForm = () => {
     setErr('');
     fetch("/emails/forgot-password",
     {
-      method: 'PATCH',
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
       body: JSON.stringify({ email })
     })
     .then(response => {
       status = response.status;
-      if (status === 404) {
-        setValidEmail(false);
-      }
-      return response.json();
+      if (status < 500) return response.json();
+      else throw Error('Server error');
     })
     .then(results => {
       console.log(results);
-      if (results.success || status < 400) {
-        setValidEmail(true);
-        setEmailSent(true);
+      if (results.Error) {
+        setErr(results.Error);
       } else {
-        setErr(results.Error)
-        setValidEmail(false);
-        setEmailSent(false);
+        setEmailSent(true);
       }
     })
     .catch(err => {
       console.log(err.message);
     })
-  }
-
-  if (!validEmail) {
-    console.log("Invalid email")
-    // show error message to user
   }
 
   if (emailSent) {
